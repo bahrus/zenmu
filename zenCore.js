@@ -7,20 +7,31 @@ function zen(strings) {
     var sArr = strings;
     var outputArr = [];
     var tagBuffer = [];
+    var zenContext = {
+        closedFirstTag: false,
+        idx: 0
+    };
     for (var _a = 0, sArr_1 = sArr; _a < sArr_1.length; _a++) {
         var tagSequence = sArr_1[_a];
         var tags = tagSequence.split('>');
-        processTags(tags, outputArr);
+        zenContext.closedFirstTag = false;
+        processTags(tags, outputArr, values, zenContext);
     }
     return outputArr;
 }
 exports.zen = zen;
-function processTags(tags, outputArr) {
+function processTags(tags, outputArr, values, zenContext) {
     if (tags.length === 0)
         return;
     var firstTag = tags.shift();
     outputArr.push("<" + firstTag + ">");
-    processTags(tags, outputArr);
+    processTags(tags, outputArr, values, zenContext);
+    if (!zenContext.closedFirstTag) {
+        if (zenContext.idx < values.length) {
+            outputArr.push(values[zenContext.idx]);
+        }
+        zenContext.closedFirstTag = true;
+    }
     outputArr.push("</" + firstTag + ">");
 }
 //# sourceMappingURL=zenCore.js.map
