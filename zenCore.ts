@@ -22,37 +22,50 @@ export function zen(strings : any, ...values){
     console.log(sArrWithSiblings);
     const outputArr = [] as any[];
     const tagBuffer = [] as string[];
-    const zenContext = {
-        // closedFirstTag: false,
-        // idx: 0,
-        // openTag: null,
-    } as ZenContext;
+    // const zenContext = {
+    //     // closedFirstTag: false,
+    //     // idx: 0,
+    //     // openTag: null,
+    // } as ZenContext;
     for(const tagSequence of sArrWithSiblings){
         const tags = tagSequence.split('>');
         console.log(tags);
         //zenContext.closedFirstTag = false;
-        processTags(tags, outputArr, values, zenContext);
+        processTags(tags, outputArr, values);
     }
     return outputArr;
 }
 
-function processTags(tags: string[], outputArr: any[], values, zenContext: ZenContext){
+function processTag(tag: string, outputArr: any[], values, fnInside){
+    const tagWNumber = tag.split(numberDel);
+    const tagWONumber = tagWNumber[0];
+    const tagWID = tagWONumber.split('#');
+    const tagWOID = tagWID[0];
+    outputArr.push('<' + tagWOID);
+    if(tagWID.length > 1){
+        outputArr.push(' id=' + tagWID[1]);
+    }
+    outputArr.push('>');
+    if(tagWNumber.length > 1){
+        const idx = parseInt(tagWNumber[1]);
+        outputArr.push(values[idx]);
+    }
+    if(fnInside) fnInside();
+    outputArr.push('</' + tagWOID + '>');
+}
+function processTags(tags: string[], outputArr: any[], values){
     if(tags.length === 0) return;
     let surroundingTag = tags.shift();
     if(surroundingTag.indexOf('+') > -1){
         const siblingTags = surroundingTag.split('+');
         for(const tag of siblingTags){
-            const tagWNumber = tag.split(numberDel);
-            outputArr.push('<' + tagWNumber[0] + '>');
-            if(tagWNumber.length > 0){
-                const idx = parseInt(tagWNumber[1]);
-                outputArr.push(values[idx]);
-            }
-            outputArr.push('</' + tagWNumber[0] + '>');
+            processTag(tag, outputArr, values, null);
         }
     }else{
-        outputArr.push(`<${surroundingTag}>`);
-        processTags(tags, outputArr, values, zenContext);
+        const innerFun = () => processTags(tags, outputArr, values);
+        processTag(surroundingTag, outputArr, values, innerFun)
+        //outputArr.push(`<${surroundingTag}>`);
+        //processTags(tags, outputArr, values);
         // if(!zenContext.closedFirstTag){
         //     if(zenContext.idx < values.length){
         //         outputArr.push(values[zenContext.idx]);
@@ -60,7 +73,7 @@ function processTags(tags: string[], outputArr: any[], values, zenContext: ZenCo
         //     }
         //     zenContext.closedFirstTag = true;
         // }
-        outputArr.push(`</${surroundingTag}>`);
+        //outputArr.push(`</${surroundingTag}>`);
     }
    
 }

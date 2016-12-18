@@ -22,18 +22,40 @@ function zen(strings) {
     console.log(sArrWithSiblings);
     var outputArr = [];
     var tagBuffer = [];
-    var zenContext = {};
+    // const zenContext = {
+    //     // closedFirstTag: false,
+    //     // idx: 0,
+    //     // openTag: null,
+    // } as ZenContext;
     for (var _a = 0, sArrWithSiblings_1 = sArrWithSiblings; _a < sArrWithSiblings_1.length; _a++) {
         var tagSequence = sArrWithSiblings_1[_a];
         var tags = tagSequence.split('>');
         console.log(tags);
         //zenContext.closedFirstTag = false;
-        processTags(tags, outputArr, values, zenContext);
+        processTags(tags, outputArr, values);
     }
     return outputArr;
 }
 exports.zen = zen;
-function processTags(tags, outputArr, values, zenContext) {
+function processTag(tag, outputArr, values, fnInside) {
+    var tagWNumber = tag.split(numberDel);
+    var tagWONumber = tagWNumber[0];
+    var tagWID = tagWONumber.split('#');
+    var tagWOID = tagWID[0];
+    outputArr.push('<' + tagWOID);
+    if (tagWID.length > 1) {
+        outputArr.push(' id=' + tagWID[1]);
+    }
+    outputArr.push('>');
+    if (tagWNumber.length > 1) {
+        var idx = parseInt(tagWNumber[1]);
+        outputArr.push(values[idx]);
+    }
+    if (fnInside)
+        fnInside();
+    outputArr.push('</' + tagWOID + '>');
+}
+function processTags(tags, outputArr, values) {
     if (tags.length === 0)
         return;
     var surroundingTag = tags.shift();
@@ -41,26 +63,12 @@ function processTags(tags, outputArr, values, zenContext) {
         var siblingTags = surroundingTag.split('+');
         for (var _i = 0, siblingTags_1 = siblingTags; _i < siblingTags_1.length; _i++) {
             var tag = siblingTags_1[_i];
-            var tagWNumber = tag.split(numberDel);
-            outputArr.push('<' + tagWNumber[0] + '>');
-            if (tagWNumber.length > 0) {
-                var idx = parseInt(tagWNumber[1]);
-                outputArr.push(values[idx]);
-            }
-            outputArr.push('</' + tagWNumber[0] + '>');
+            processTag(tag, outputArr, values, null);
         }
     }
     else {
-        outputArr.push("<" + surroundingTag + ">");
-        processTags(tags, outputArr, values, zenContext);
-        // if(!zenContext.closedFirstTag){
-        //     if(zenContext.idx < values.length){
-        //         outputArr.push(values[zenContext.idx]);
-        //         zenContext.idx++;
-        //     }
-        //     zenContext.closedFirstTag = true;
-        // }
-        outputArr.push("</" + surroundingTag + ">");
+        var innerFun = function () { return processTags(tags, outputArr, values); };
+        processTag(surroundingTag, outputArr, values, innerFun);
     }
 }
 function processSiblings() {
