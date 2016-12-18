@@ -29,6 +29,7 @@ function processTags(tags, outputArr, values, zenContext) {
     if (!zenContext.closedFirstTag) {
         if (zenContext.idx < values.length) {
             outputArr.push(values[zenContext.idx]);
+            zenContext.idx++;
         }
         zenContext.closedFirstTag = true;
     }

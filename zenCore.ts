@@ -6,7 +6,7 @@ interface ZenContext{
 export function zen(strings : any, ...values){
     const sArr = strings as string[];
     const outputArr = [] as any[];
-    const tagBuffer = [] as string[] ;
+    const tagBuffer = [] as string[];
     const zenContext = {
         closedFirstTag: false,
         idx: 0
@@ -27,6 +27,7 @@ function processTags(tags: string[], outputArr: any[], values, zenContext: ZenCo
     if(!zenContext.closedFirstTag){
         if(zenContext.idx < values.length){
             outputArr.push(values[zenContext.idx]);
+            zenContext.idx++;
         }
         zenContext.closedFirstTag = true;
     }
