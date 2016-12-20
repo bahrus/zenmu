@@ -14,7 +14,7 @@ export function zen(strings : any, ...values){
             sArrWithSiblings.push(sArrElement);
         }
     }
-    console.log(sArrWithSiblings);
+    //console.log(sArrWithSiblings);
     const outputArr = [] as any[];
     //const tagBuffer = [] as string[];
     let allTags = [];
@@ -62,8 +62,15 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                 outputArr.push(val);
                 break;
             case 'object':
-                for(const key in val){
-                    const atV = val[key];
+                let props = val;
+                let content = null;
+                if(Array.isArray(val)){
+                    //console.log('isArray');
+                    props = val[1];
+                    content = val[0];
+                }
+                for(const key in props){
+                    const atV = props[key];
                     switch(typeof atV){
                         case 'boolean':
                             outputArr.push(` ${camelToSnake(key)}`);
@@ -74,7 +81,11 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                     
                 }
                 outputArr.push('>');
+                if(content){
+                    outputArr.push(content);
+                }
                 break;
+            
         }
     }else{
         outputArr.push('>');

@@ -13,4 +13,5 @@ console.assert(html1 === `<div class="myClass2"><ul id="myUL" class="myClass1" m
 
 const test2 = zen `div${['123',{a:'456'}]}`;
 const html2 = test2.join('');
-//console.assert(html2 === `<div a="456">123</div>`)
+console.log(html2);
+console.assert(html2 === `<div a="456">123</div>`)

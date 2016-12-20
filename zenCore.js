@@ -19,7 +19,7 @@ function zen(strings) {
             sArrWithSiblings.push(sArrElement);
         }
     }
-    console.log(sArrWithSiblings);
+    //console.log(sArrWithSiblings);
     var outputArr = [];
     //const tagBuffer = [] as string[];
     var allTags = [];
@@ -64,8 +64,15 @@ function processTag(tag, outputArr, values, fnInside) {
                 outputArr.push(val);
                 break;
             case 'object':
-                for (var key in val) {
-                    var atV = val[key];
+                var props = val;
+                var content = null;
+                if (Array.isArray(val)) {
+                    //console.log('isArray');
+                    props = val[1];
+                    content = val[0];
+                }
+                for (var key in props) {
+                    var atV = props[key];
                     switch (typeof atV) {
                         case 'boolean':
                             outputArr.push(" " + camelToSnake(key));
@@ -75,6 +82,9 @@ function processTag(tag, outputArr, values, fnInside) {
                     }
                 }
                 outputArr.push('>');
+                if (content) {
+                    outputArr.push(content);
+                }
                 break;
         }
     }
