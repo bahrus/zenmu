@@ -1,5 +1,5 @@
 "use strict";
-var numberDel = '###';
+var numberDel = '$';
 function zen(strings) {
     var values = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -11,7 +11,7 @@ function zen(strings) {
         var word = sArr[i];
         if (!word)
             continue;
-        var sArrElement = word + '###' + i;
+        var sArrElement = word + numberDel + i;
         if (sArrElement.substr(0, 1) === '+') {
             sArrWithSiblings[sArrWithSiblings.length - 1] += sArrElement;
         }
@@ -40,7 +40,7 @@ exports.zen = zen;
 function processTag(tag, outputArr, values, fnInside) {
     var tagWNumber = tag.split(numberDel);
     var tagWONumber = tagWNumber[0];
-    var tagWClasses = tag.split('.');
+    var tagWClasses = tagWONumber.split('.');
     var tagWOClasses = tagWClasses[0];
     var tagWID = tagWOClasses.split('#');
     var tagWOID = tagWID[0];

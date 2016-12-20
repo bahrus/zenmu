@@ -5,14 +5,14 @@ interface ZenContext{
     // openTag: string,
 }
 
-const numberDel = '###';
+const numberDel = '$';
 export function zen(strings : any, ...values){
     const sArr = strings as string[];
     const sArrWithSiblings = [];
     for(let i = 0, ii = sArr.length; i < ii; i++){
         const word = sArr[i];
         if(!word) continue;
-        const sArrElement = word + '###' + i;
+        const sArrElement = word + numberDel + i;
         if(sArrElement.substr(0, 1) === '+'){
             sArrWithSiblings[sArrWithSiblings.length - 1] += sArrElement;
         }else{
@@ -39,7 +39,7 @@ export function zen(strings : any, ...values){
 function processTag(tag: string, outputArr: any[], values, fnInside){
     const tagWNumber = tag.split(numberDel);
     const tagWONumber = tagWNumber[0];
-    const tagWClasses = tag.split('.');
+    const tagWClasses = tagWONumber.split('.');
     const tagWOClasses = tagWClasses[0];
     const tagWID = tagWOClasses.split('#');
     const tagWOID = tagWID[0];
