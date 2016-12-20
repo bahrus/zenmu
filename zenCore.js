@@ -40,11 +40,16 @@ exports.zen = zen;
 function processTag(tag, outputArr, values, fnInside) {
     var tagWNumber = tag.split(numberDel);
     var tagWONumber = tagWNumber[0];
-    var tagWID = tagWONumber.split('#');
+    var tagWClasses = tag.split('.');
+    var tagWOClasses = tagWClasses[0];
+    var tagWID = tagWOClasses.split('#');
     var tagWOID = tagWID[0];
     outputArr.push('<' + tagWOID);
     if (tagWID.length > 1) {
-        outputArr.push(' id=' + tagWID[1]);
+        outputArr.push(" id=\"" + tagWID[1] + "\"");
+    }
+    if (tagWClasses.length > 1) {
+        outputArr.push(" class=\"" + tagWClasses.slice(1).join(' ') + "\"");
     }
     outputArr.push('>');
     if (tagWNumber.length > 1) {

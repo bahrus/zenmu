@@ -39,11 +39,17 @@ export function zen(strings : any, ...values){
 function processTag(tag: string, outputArr: any[], values, fnInside){
     const tagWNumber = tag.split(numberDel);
     const tagWONumber = tagWNumber[0];
-    const tagWID = tagWONumber.split('#');
+    const tagWClasses = tag.split('.');
+    const tagWOClasses = tagWClasses[0];
+    const tagWID = tagWOClasses.split('#');
     const tagWOID = tagWID[0];
     outputArr.push('<' + tagWOID);
+    
     if(tagWID.length > 1){
-        outputArr.push(' id=' + tagWID[1]);
+        outputArr.push(` id="${tagWID[1]}"`);
+    }
+    if(tagWClasses.length > 1){
+        outputArr.push(` class="${tagWClasses.slice(1).join(' ')}"`)
     }
     outputArr.push('>');
     if(tagWNumber.length > 1){
