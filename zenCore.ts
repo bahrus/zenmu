@@ -26,7 +26,7 @@ export function zen(strings : any, ...values){
         //console.log(allTags);
         //processTags(tags, outputArr, values);
     }
-    allTags = allTags.filter(tag => tag.length !== 0);
+    //allTags = allTags.filter(tag => tag.length !== 0);
     processTags(allTags, outputArr, values);
     return outputArr;
 }

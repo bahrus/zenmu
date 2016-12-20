@@ -30,7 +30,7 @@ function zen(strings) {
         //console.log(tags);
         allTags = allTags.concat(tags);
     }
-    allTags = allTags.filter(function (tag) { return tag.length !== 0; });
+    //allTags = allTags.filter(tag => tag.length !== 0);
     processTags(allTags, outputArr, values);
     return outputArr;
 }
