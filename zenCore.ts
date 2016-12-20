@@ -1,9 +1,4 @@
 
-interface ZenContext{
-    // idx: number,
-    // closedFirstTag: boolean,
-    // openTag: string,
-}
 
 const numberDel = '$';
 export function zen(strings : any, ...values){
@@ -22,25 +17,21 @@ export function zen(strings : any, ...values){
     console.log(sArrWithSiblings);
     const outputArr = [] as any[];
     const tagBuffer = [] as string[];
-    // const zenContext = {
-    //     // closedFirstTag: false,
-    //     // idx: 0,
-    //     // openTag: null,
-    // } as ZenContext;
     for(const tagSequence of sArrWithSiblings){
         const tags = tagSequence.split('>');
         console.log(tags);
-        //zenContext.closedFirstTag = false;
         processTags(tags, outputArr, values);
     }
     return outputArr;
 }
+
 
 function processTag(tag: string, outputArr: any[], values, fnInside){
     const tagWNumber = tag.split(numberDel);
     const tagWONumber = tagWNumber[0];
     const tagWClasses = tagWONumber.split('.');
     const tagWOClasses = tagWClasses[0];
+    
     const tagWID = tagWOClasses.split('#');
     const tagWOID = tagWID[0];
     outputArr.push('<' + tagWOID);

@@ -22,16 +22,10 @@ function zen(strings) {
     console.log(sArrWithSiblings);
     var outputArr = [];
     var tagBuffer = [];
-    // const zenContext = {
-    //     // closedFirstTag: false,
-    //     // idx: 0,
-    //     // openTag: null,
-    // } as ZenContext;
     for (var _a = 0, sArrWithSiblings_1 = sArrWithSiblings; _a < sArrWithSiblings_1.length; _a++) {
         var tagSequence = sArrWithSiblings_1[_a];
         var tags = tagSequence.split('>');
         console.log(tags);
-        //zenContext.closedFirstTag = false;
         processTags(tags, outputArr, values);
     }
     return outputArr;
