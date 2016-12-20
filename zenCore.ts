@@ -63,12 +63,13 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                 break;
             case 'object':
                 for(const key in val){
-                    switch(typeof val){
+                    const atV = val[key];
+                    switch(typeof atV){
                         case 'boolean':
                             outputArr.push(` ${camelToSnake(key)}`);
                             break;
                         default:
-                            outputArr.push(` ${camelToSnake(key)}="${val[key]}"`);
+                            outputArr.push(` ${camelToSnake(key)}="${atV}"`);
                     }
                     
                 }
