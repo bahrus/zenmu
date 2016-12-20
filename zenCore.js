@@ -9,8 +9,7 @@ function zen(strings) {
     var sArrWithSiblings = [];
     for (var i = 0, ii = sArr.length; i < ii; i++) {
         var word = sArr[i];
-        if (!word)
-            continue;
+        //if(!word) continue;
         var sArrElement = word + numberDel + i;
         if (sArrElement.substr(0, 1) === '+') {
             sArrWithSiblings[sArrWithSiblings.length - 1] += sArrElement;
@@ -41,13 +40,23 @@ function camelToSnake(str) {
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
 function processTag(tag, outputArr, values, fnInside) {
-    //if(tag.length === 0) return;
+    if (tag.length === 0)
+        return;
     var tagWNumber = tag.split(numberDel);
     var tagWONumber = tagWNumber[0];
     var tagWClasses = tagWONumber.split('.');
     var tagWOClasses = tagWClasses[0];
     var tagWID = tagWOClasses.split('#');
-    var tagWOID = tagWID[0];
+    var tagWOIDAndNoDiv = tagWID[0];
+    var idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
+    var val = idx > -1 ? values[idx] : undefined;
+    if (tagWOIDAndNoDiv.length === 0) {
+        if (tagWID.length === 1 && tagWClasses.length === 1) {
+            if (typeof val === 'undefined')
+                return;
+        }
+    }
+    var tagWOID = tagWOIDAndNoDiv || 'div';
     outputArr.push('<' + tagWOID);
     if (tagWID.length > 1) {
         outputArr.push(" id=\"" + tagWID[1] + "\"");
@@ -55,9 +64,10 @@ function processTag(tag, outputArr, values, fnInside) {
     if (tagWClasses.length > 1) {
         outputArr.push(" class=\"" + tagWClasses.slice(1).join(' ') + "\"");
     }
-    if (tagWNumber.length > 1) {
-        var idx = parseInt(tagWNumber[1]);
-        var val = values[idx];
+    if (typeof val !== 'undefined') {
+        // const idx = parseInt(tagWNumber[1]);
+        // debugger;
+        // const val = values[idx];
         switch (typeof val) {
             case 'string':
                 outputArr.push('>');
@@ -75,7 +85,9 @@ function processTag(tag, outputArr, values, fnInside) {
                     var atV = props[key];
                     switch (typeof atV) {
                         case 'boolean':
-                            outputArr.push(" " + camelToSnake(key));
+                            if (atV) {
+                                outputArr.push(" " + camelToSnake(key));
+                            }
                             break;
                         default:
                             outputArr.push(" " + camelToSnake(key) + "=\"" + atV + "\"");

@@ -6,7 +6,7 @@ export function zen(strings : any, ...values){
     const sArrWithSiblings = [];
     for(let i = 0, ii = sArr.length; i < ii; i++){
         const word = sArr[i];
-        if(!word) continue;
+        //if(!word) continue;
         const sArrElement = word + numberDel + i;
         if(sArrElement.substr(0, 1) === '+'){
             sArrWithSiblings[sArrWithSiblings.length - 1] += sArrElement;
@@ -37,25 +37,33 @@ function camelToSnake(str: string){
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
 function processTag(tag: string, outputArr: any[], values, fnInside){
-    //if(tag.length === 0) return;
+    if(tag.length === 0) return;
     const tagWNumber = tag.split(numberDel);
     const tagWONumber = tagWNumber[0];
     const tagWClasses = tagWONumber.split('.');
     const tagWOClasses = tagWClasses[0];
     
     const tagWID = tagWOClasses.split('#');
-    const tagWOID = tagWID[0];
+    const tagWOIDAndNoDiv = tagWID[0];
+    const idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
+    const val = idx > -1 ? values[idx] : undefined;
+    if(tagWOIDAndNoDiv.length === 0){
+        if(tagWID.length === 1 && tagWClasses.length === 1){
+          if(typeof val === 'undefined') return;
+        }
+    }
+    const tagWOID = tagWOIDAndNoDiv || 'div';
     outputArr.push('<' + tagWOID);
-    
     if(tagWID.length > 1){
         outputArr.push(` id="${tagWID[1]}"`);
     }
     if(tagWClasses.length > 1){
         outputArr.push(` class="${tagWClasses.slice(1).join(' ')}"`)
     }
-    if(tagWNumber.length > 1){
-        const idx = parseInt(tagWNumber[1]);
-        const val = values[idx]
+    if(typeof val !== 'undefined'){
+        // const idx = parseInt(tagWNumber[1]);
+        // debugger;
+        // const val = values[idx];
         switch(typeof val){
             case 'string':
                 outputArr.push('>');
@@ -73,7 +81,9 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                     const atV = props[key];
                     switch(typeof atV){
                         case 'boolean':
-                            outputArr.push(` ${camelToSnake(key)}`);
+                            if(atV){
+                                outputArr.push(` ${camelToSnake(key)}`);
+                            }
                             break;
                         default:
                             outputArr.push(` ${camelToSnake(key)}="${atV}"`);
