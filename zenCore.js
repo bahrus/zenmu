@@ -40,12 +40,14 @@ function processTag(tag, outputArr, values, fnInside) {
     var tagWONumber = tagWNumber[0];
     var tagWClasses = tagWONumber.split('.');
     var tagWOClasses = tagWClasses[0];
-    var tagWID = tagWOClasses.split('#');
+    var tagWBooleanAttributes = tagWOClasses.split('@');
+    var tagWOBooleanAttributes = tagWBooleanAttributes[0];
+    var tagWID = tagWOBooleanAttributes.split('#');
     var tagWOIDAndNoDiv = tagWID[0];
     var idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
     var val = idx > -1 ? values[idx] : undefined;
     if (tagWOIDAndNoDiv.length === 0) {
-        if (tagWID.length === 1 && tagWClasses.length === 1) {
+        if (tagWID.length === 1 && tagWClasses.length === 1 && tagWBooleanAttributes.length === 1) {
             if (typeof val === 'undefined')
                 return;
         }
@@ -54,6 +56,10 @@ function processTag(tag, outputArr, values, fnInside) {
     outputArr.push('<' + tagWOID);
     if (tagWID.length > 1) {
         outputArr.push(" id=\"" + tagWID[1] + "\"");
+    }
+    if (tagWBooleanAttributes.length > 1) {
+        var booleanAttributes = tagWBooleanAttributes.slice(1).map(function (s) { return camelToSnake(s); }).join(' ');
+        outputArr.push(" " + booleanAttributes);
     }
     if (tagWClasses.length > 1) {
         outputArr.push(" class=\"" + tagWClasses.slice(1).join(' ') + "\"");

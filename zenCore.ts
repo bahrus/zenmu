@@ -34,12 +34,14 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
     const tagWONumber = tagWNumber[0];
     const tagWClasses = tagWONumber.split('.');
     const tagWOClasses = tagWClasses[0];
-    const tagWID = tagWOClasses.split('#');
+    const tagWBooleanAttributes = tagWOClasses.split('@');
+    const tagWOBooleanAttributes = tagWBooleanAttributes[0]; 
+    const tagWID = tagWOBooleanAttributes.split('#');
     const tagWOIDAndNoDiv = tagWID[0];
     const idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
     const val = idx > -1 ? values[idx] : undefined;
     if(tagWOIDAndNoDiv.length === 0){
-        if(tagWID.length === 1 && tagWClasses.length === 1){
+        if(tagWID.length === 1 && tagWClasses.length === 1 && tagWBooleanAttributes.length === 1){
           if(typeof val === 'undefined') return;
         }
     }
@@ -47,6 +49,11 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
     outputArr.push('<' + tagWOID);
     if(tagWID.length > 1){
         outputArr.push(` id="${tagWID[1]}"`);
+    }
+    
+    if(tagWBooleanAttributes.length > 1){
+        const booleanAttributes = tagWBooleanAttributes.slice(1).map(s=> camelToSnake(s)).join(' ');
+        outputArr.push(` ${booleanAttributes}`);
     }
     if(tagWClasses.length > 1){
         outputArr.push(` class="${tagWClasses.slice(1).join(' ')}"`)
