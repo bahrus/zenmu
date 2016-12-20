@@ -9,7 +9,6 @@ function zen(strings) {
     var sArrWithSiblings = [];
     for (var i = 0, ii = sArr.length; i < ii; i++) {
         var word = sArr[i];
-        //if(!word) continue;
         var sArrElement = word + numberDel + i;
         if (sArrElement.substr(0, 1) === '+') {
             sArrWithSiblings[sArrWithSiblings.length - 1] += sArrElement;
@@ -18,18 +17,13 @@ function zen(strings) {
             sArrWithSiblings.push(sArrElement);
         }
     }
-    //console.log(sArrWithSiblings);
     var outputArr = [];
-    //const tagBuffer = [] as string[];
     var allTags = [];
     for (var _a = 0, sArrWithSiblings_1 = sArrWithSiblings; _a < sArrWithSiblings_1.length; _a++) {
         var tagSequence = sArrWithSiblings_1[_a];
-        console.log(tagSequence);
         var tags = tagSequence.split('>');
-        //console.log(tags);
         allTags = allTags.concat(tags);
     }
-    //allTags = allTags.filter(tag => tag.length !== 0);
     processTags(allTags, outputArr, values);
     return outputArr;
 }
@@ -65,9 +59,6 @@ function processTag(tag, outputArr, values, fnInside) {
         outputArr.push(" class=\"" + tagWClasses.slice(1).join(' ') + "\"");
     }
     if (typeof val !== 'undefined') {
-        // const idx = parseInt(tagWNumber[1]);
-        // debugger;
-        // const val = values[idx];
         switch (typeof val) {
             case 'string':
                 outputArr.push('>');
@@ -77,7 +68,6 @@ function processTag(tag, outputArr, values, fnInside) {
                 var props = val;
                 var content = null;
                 if (Array.isArray(val)) {
-                    //console.log('isArray');
                     props = val[1];
                     content = val[0];
                 }
@@ -122,7 +112,5 @@ function processTags(tags, outputArr, values) {
         var innerFun = function () { return processTags(tags, outputArr, values); };
         processTag(surroundingTag, outputArr, values, innerFun);
     }
-}
-function processSiblings() {
 }
 //# sourceMappingURL=zenCore.js.map

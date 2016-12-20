@@ -6,7 +6,6 @@ export function zen(strings : any, ...values){
     const sArrWithSiblings = [];
     for(let i = 0, ii = sArr.length; i < ii; i++){
         const word = sArr[i];
-        //if(!word) continue;
         const sArrElement = word + numberDel + i;
         if(sArrElement.substr(0, 1) === '+'){
             sArrWithSiblings[sArrWithSiblings.length - 1] += sArrElement;
@@ -14,19 +13,12 @@ export function zen(strings : any, ...values){
             sArrWithSiblings.push(sArrElement);
         }
     }
-    //console.log(sArrWithSiblings);
     const outputArr = [] as any[];
-    //const tagBuffer = [] as string[];
     let allTags = [];
     for(const tagSequence of sArrWithSiblings){
-        console.log(tagSequence);
         const tags = tagSequence.split('>');
-        //console.log(tags);
         allTags = allTags.concat(tags);
-        //console.log(allTags);
-        //processTags(tags, outputArr, values);
     }
-    //allTags = allTags.filter(tag => tag.length !== 0);
     processTags(allTags, outputArr, values);
     return outputArr;
 }
@@ -42,7 +34,6 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
     const tagWONumber = tagWNumber[0];
     const tagWClasses = tagWONumber.split('.');
     const tagWOClasses = tagWClasses[0];
-    
     const tagWID = tagWOClasses.split('#');
     const tagWOIDAndNoDiv = tagWID[0];
     const idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
@@ -61,9 +52,6 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
         outputArr.push(` class="${tagWClasses.slice(1).join(' ')}"`)
     }
     if(typeof val !== 'undefined'){
-        // const idx = parseInt(tagWNumber[1]);
-        // debugger;
-        // const val = values[idx];
         switch(typeof val){
             case 'string':
                 outputArr.push('>');
@@ -73,7 +61,6 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                 let props = val;
                 let content = null;
                 if(Array.isArray(val)){
-                    //console.log('isArray');
                     props = val[1];
                     content = val[0];
                 }
@@ -114,20 +101,5 @@ function processTags(tags: string[], outputArr: any[], values){
     }else{
         const innerFun = () => processTags(tags, outputArr, values);
         processTag(surroundingTag, outputArr, values, innerFun)
-        //outputArr.push(`<${surroundingTag}>`);
-        //processTags(tags, outputArr, values);
-        // if(!zenContext.closedFirstTag){
-        //     if(zenContext.idx < values.length){
-        //         outputArr.push(values[zenContext.idx]);
-        //         zenContext.idx++;
-        //     }
-        //     zenContext.closedFirstTag = true;
-        // }
-        //outputArr.push(`</${surroundingTag}>`);
     }
-   
-}
-
-function processSiblings(){
-
 }
