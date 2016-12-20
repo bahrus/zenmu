@@ -16,12 +16,18 @@ export function zen(strings : any, ...values){
     }
     console.log(sArrWithSiblings);
     const outputArr = [] as any[];
-    const tagBuffer = [] as string[];
+    //const tagBuffer = [] as string[];
+    let allTags = [];
     for(const tagSequence of sArrWithSiblings){
+        console.log(tagSequence);
         const tags = tagSequence.split('>');
-        console.log(tags);
-        processTags(tags, outputArr, values);
+        //console.log(tags);
+        allTags = allTags.concat(tags);
+        //console.log(allTags);
+        //processTags(tags, outputArr, values);
     }
+    allTags = allTags.filter(tag => tag.length !== 0);
+    processTags(allTags, outputArr, values);
     return outputArr;
 }
 
@@ -31,6 +37,7 @@ function camelToSnake(str: string){
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
 function processTag(tag: string, outputArr: any[], values, fnInside){
+    //if(tag.length === 0) return;
     const tagWNumber = tag.split(numberDel);
     const tagWONumber = tagWNumber[0];
     const tagWClasses = tagWONumber.split('.');

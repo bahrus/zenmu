@@ -21,13 +21,17 @@ function zen(strings) {
     }
     console.log(sArrWithSiblings);
     var outputArr = [];
-    var tagBuffer = [];
+    //const tagBuffer = [] as string[];
+    var allTags = [];
     for (var _a = 0, sArrWithSiblings_1 = sArrWithSiblings; _a < sArrWithSiblings_1.length; _a++) {
         var tagSequence = sArrWithSiblings_1[_a];
+        console.log(tagSequence);
         var tags = tagSequence.split('>');
-        console.log(tags);
-        processTags(tags, outputArr, values);
+        //console.log(tags);
+        allTags = allTags.concat(tags);
     }
+    allTags = allTags.filter(function (tag) { return tag.length !== 0; });
+    processTags(allTags, outputArr, values);
     return outputArr;
 }
 exports.zen = zen;
@@ -37,6 +41,7 @@ function camelToSnake(str) {
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
 function processTag(tag, outputArr, values, fnInside) {
+    //if(tag.length === 0) return;
     var tagWNumber = tag.split(numberDel);
     var tagWONumber = tagWNumber[0];
     var tagWClasses = tagWONumber.split('.');
