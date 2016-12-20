@@ -31,6 +31,11 @@ function zen(strings) {
     return outputArr;
 }
 exports.zen = zen;
+var camelToSnakeRegEx = /([A-Z])/g;
+var toDashLowerCase = function ($1) { return "-" + $1.toLowerCase(); };
+function camelToSnake(str) {
+    return str.replace(camelToSnakeRegEx, toDashLowerCase);
+}
 function processTag(tag, outputArr, values, fnInside) {
     var tagWNumber = tag.split(numberDel);
     var tagWONumber = tagWNumber[0];
@@ -45,10 +50,30 @@ function processTag(tag, outputArr, values, fnInside) {
     if (tagWClasses.length > 1) {
         outputArr.push(" class=\"" + tagWClasses.slice(1).join(' ') + "\"");
     }
-    outputArr.push('>');
     if (tagWNumber.length > 1) {
         var idx = parseInt(tagWNumber[1]);
-        outputArr.push(values[idx]);
+        var val = values[idx];
+        switch (typeof val) {
+            case 'string':
+                outputArr.push('>');
+                outputArr.push(val);
+                break;
+            case 'object':
+                for (var key in val) {
+                    switch (typeof val) {
+                        case 'boolean':
+                            outputArr.push(" " + camelToSnake(key));
+                            break;
+                        default:
+                            outputArr.push(" " + camelToSnake(key) + "=\"" + val[key] + "\"");
+                    }
+                }
+                outputArr.push('>');
+                break;
+        }
+    }
+    else {
+        outputArr.push('>');
     }
     if (fnInside)
         fnInside();

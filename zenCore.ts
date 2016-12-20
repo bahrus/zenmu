@@ -25,7 +25,11 @@ export function zen(strings : any, ...values){
     return outputArr;
 }
 
-
+const camelToSnakeRegEx = /([A-Z])/g;
+const toDashLowerCase = function($1){return "-"+$1.toLowerCase();}
+function camelToSnake(str: string){
+    return str.replace(camelToSnakeRegEx, toDashLowerCase);
+}
 function processTag(tag: string, outputArr: any[], values, fnInside){
     const tagWNumber = tag.split(numberDel);
     const tagWONumber = tagWNumber[0];
@@ -42,10 +46,30 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
     if(tagWClasses.length > 1){
         outputArr.push(` class="${tagWClasses.slice(1).join(' ')}"`)
     }
-    outputArr.push('>');
     if(tagWNumber.length > 1){
         const idx = parseInt(tagWNumber[1]);
-        outputArr.push(values[idx]);
+        const val = values[idx]
+        switch(typeof val){
+            case 'string':
+                outputArr.push('>');
+                outputArr.push(val);
+                break;
+            case 'object':
+                for(const key in val){
+                    switch(typeof val){
+                        case 'boolean':
+                            outputArr.push(` ${camelToSnake(key)}`);
+                            break;
+                        default:
+                            outputArr.push(` ${camelToSnake(key)}="${val[key]}"`);
+                    }
+                    
+                }
+                outputArr.push('>');
+                break;
+        }
+    }else{
+        outputArr.push('>');
     }
     if(fnInside) fnInside();
     outputArr.push('</' + tagWOID + '>');

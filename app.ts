@@ -6,6 +6,7 @@ interface IAttribs{
     myAttrib3: boolean,
 }
 
-const test1 = zen `div.myClass2>ul#myUL${{myAttrib1:'val1',myAttrib2:42,myAttrib3:true} as IAttribs}.myClass1>li${'Hello, '}+li${'World.'}`
-
-console.assert(test1.join('') === `<div class="myClass2"><ul id="myUL" my-attrib1="val1" my-attrib2=42 my-attrib3 class="myClass1"><li>Hello, </li><li>World.</li></ul></div>`, 'test1 failed');
+const test1 = zen `div.myClass2>ul#myUL.myClass1${{myAttrib1:'val1',myAttrib2:42,myAttrib3:true} as IAttribs}>li${'Hello, '}+li${'World.'}`
+const html = test1.join('');
+console.log(html);
+console.assert(html === `<div class="myClass2"><ul id="myUL" my-attrib1="val1" my-attrib2=42 my-attrib3 class="myClass1"><li>Hello, </li><li>World.</li></ul></div>`, 'test1 failed');
