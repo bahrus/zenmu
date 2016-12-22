@@ -33,7 +33,7 @@ var toDashLowerCase = function ($1) { return "-" + $1.toLowerCase(); };
 function camelToSnake(str) {
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
-var atSplitRegExp = /([^\\\][^@]|\\@)+/g;
+//const atSplitRegExp = /([^\\\][^@]|\\@)+/g;
 var scSplitRegExp = /([^\\\][^:]|\\:)+/g;
 var splitRegExps = {};
 function splitWithEscape(s, chr) {
@@ -42,52 +42,19 @@ function splitWithEscape(s, chr) {
         var r = "([^\\\\\\][^" + chr + "]|\\\\" + chr + ")+";
         console.log(r);
         reg = new RegExp(r, 'g');
-        debugger;
         splitRegExps[chr] = reg;
     }
-    //debugger;
-    return s.match(reg) || [''];
+    var ret = (' ' + s).match(reg);
+    ret[0] = ret[0].substr(1);
+    return ret;
 }
-// function splitWithEscape(s: string, chr: string){
-//     console.assert(chr.length === 1);
-//     const retObj: string[] = [];
-//     const buff = [];
-//     let prevLetterIsEscape = false;
-//     for(let i = 0, ii = s.length; i < ii; i++){
-//         const letter = s.charAt(i);
-//         switch(letter){
-//             case chr:
-//                 if(!prevLetterIsEscape){
-//                     retObj.push(buff.join(''));
-//                 }else{
-//                     buff.push(letter);
-//                     prevLetterIsEscape = false;
-//                 }
-//                 break;
-//             case '\\':
-//                 if(prevLetterIsEscape){
-//                     buff.push('\\');
-//                 }else{
-//                      prevLetterIsEscape = true;
-//                 }
-//                 break;
-//             default:
-//                 if(prevLetterIsEscape){
-//                     buff.push('\\');
-//                 }
-//         }
-//         if(letter === chr && prevLetter !== '\\'){
-//         }
-//     }
-// }
 function processTag(tag, outputArr, values, fnInside) {
     if (tag.length === 0)
         return;
     var tagWNumber = tag.split(numberDel);
     var tagWONumber = tagWNumber[0];
-    var tagWAttributes = tagWONumber.match(atSplitRegExp) || [''];
-    var test = splitWithEscape(tagWONumber, '@');
-    debugger;
+    //const tagWAttributes = tagWONumber.match(atSplitRegExp) || [''];
+    var tagWAttributes = splitWithEscape(tagWONumber, '@');
     var tagWOAttributes = tagWAttributes[0];
     var tagWClasses = tagWOAttributes.split('.');
     var tagWOClasses = tagWClasses[0];
