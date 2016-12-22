@@ -96,20 +96,28 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                 let props = val;
                 let content = null;
                 if(Array.isArray(val)){
-                    props = val[1];
-                    content = val[0];
+                    // props = val[1];
+                    // content = val[0];
+                    throw "Not Implemented";
                 }
                 for(const key in props){
                     const atV = props[key];
-                    switch(typeof atV){
-                        case 'boolean':
-                            if(atV){
-                                outputArr.push(` ${camelToSnake(key)}`);
-                            }
+                    switch(key){
+                        case 'innerHTML':
+                            content = atV;
                             break;
                         default:
-                            outputArr.push(` ${camelToSnake(key)}="${atV}"`);
+                            switch(typeof atV){
+                                case 'boolean':
+                                    if(atV){
+                                        outputArr.push(` ${camelToSnake(key)}`);
+                                    }
+                                    break;
+                                default:
+                                    outputArr.push(` ${camelToSnake(key)}="${atV}"`);
+                            }
                     }
+                    
                     
                 }
                 outputArr.push('>');
