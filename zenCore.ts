@@ -34,12 +34,61 @@ function camelToSnake(str: string){
 }
 const atSplitRegExp = /([^\\\][^@]|\\@)+/g;
 const scSplitRegExp = /([^\\\][^:]|\\:)+/g;
+const splitRegExps: {[key: string]: RegExp} = {};
+function splitWithEscape(s: string, chr: string){
+    let reg = splitRegExps[chr];
+    if(!reg){
+        const r = `([^\\\\\\][^${chr}]|\\\\${chr})+`;
+        console.log(r);
+        reg = new RegExp(r, 'g');
+        debugger;
+        splitRegExps[chr] = reg;
+    }
+    //debugger;
+    return s.match(reg) || [''];
+}
+// function splitWithEscape(s: string, chr: string){
+//     console.assert(chr.length === 1);
+//     const retObj: string[] = [];
+//     const buff = [];
+//     let prevLetterIsEscape = false;
+//     for(let i = 0, ii = s.length; i < ii; i++){
+//         const letter = s.charAt(i);
+//         switch(letter){
+//             case chr:
+//                 if(!prevLetterIsEscape){
+//                     retObj.push(buff.join(''));
+//                 }else{
+//                     buff.push(letter);
+//                     prevLetterIsEscape = false;
+//                 }
+//                 break;
+//             case '\\':
+//                 if(prevLetterIsEscape){
+//                     buff.push('\\');
+//                 }else{
+//                      prevLetterIsEscape = true;
+//                 }
+               
+//                 break;
+//             default:
+//                 if(prevLetterIsEscape){
+//                     buff.push('\\');
+//                 }
+//         }
+//         if(letter === chr && prevLetter !== '\\'){
 
+//         }
+        
+//     }
+// }
 function processTag(tag: string, outputArr: any[], values, fnInside){
     if(tag.length === 0) return;
     const tagWNumber = tag.split(numberDel);
     const tagWONumber = tagWNumber[0];
     const tagWAttributes = tagWONumber.match(atSplitRegExp) || [''];
+    const test = splitWithEscape(tagWONumber, '@');
+    debugger;
     const tagWOAttributes = tagWAttributes[0]; 
     const tagWClasses = tagWOAttributes.split('.');
     const tagWOClasses = tagWClasses[0];
