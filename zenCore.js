@@ -33,21 +33,24 @@ var toDashLowerCase = function ($1) { return "-" + $1.toLowerCase(); };
 function camelToSnake(str) {
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
+var atSplitRegExp = /([^\\\][^@]|\\@)+/g;
+var scSplitRegExp = /([^\\\][^:]|\\:)+/g;
 function processTag(tag, outputArr, values, fnInside) {
     if (tag.length === 0)
         return;
     var tagWNumber = tag.split(numberDel);
     var tagWONumber = tagWNumber[0];
-    var tagWClasses = tagWONumber.split('.');
+    var tagWAttributes = tagWONumber.match(atSplitRegExp) || [''];
+    var tagWOAttributes = tagWAttributes[0];
+    var tagWClasses = tagWOAttributes.split('.');
     var tagWOClasses = tagWClasses[0];
-    var tagWBooleanAttributes = tagWOClasses.split('@');
-    var tagWOBooleanAttributes = tagWBooleanAttributes[0];
-    var tagWID = tagWOBooleanAttributes.split('#');
+    //const tagWAttributes = tagWOClasses.split('@');
+    var tagWID = tagWOClasses.split('#');
     var tagWOIDAndNoDiv = tagWID[0];
     var idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
     var val = idx > -1 ? values[idx] : undefined;
     if (tagWOIDAndNoDiv.length === 0) {
-        if (tagWID.length === 1 && tagWClasses.length === 1 && tagWBooleanAttributes.length === 1) {
+        if (tagWID.length === 1 && tagWClasses.length === 1 && tagWAttributes.length === 1) {
             if (typeof val === 'undefined')
                 return;
         }
@@ -57,9 +60,13 @@ function processTag(tag, outputArr, values, fnInside) {
     if (tagWID.length > 1) {
         outputArr.push(" id=\"" + tagWID[1] + "\"");
     }
-    if (tagWBooleanAttributes.length > 1) {
-        var booleanAttributes = tagWBooleanAttributes.slice(1).map(function (s) { return camelToSnake(s); }).join(' ');
-        outputArr.push(" " + booleanAttributes);
+    if (tagWAttributes.length > 1) {
+        var attribs = tagWAttributes.slice(1).map(function (s) {
+            var lhsRhs = s.match(scSplitRegExp);
+            var key = camelToSnake(lhsRhs[0]);
+            return lhsRhs.length === 1 ? key : key + "=\"" + lhsRhs[1] + "\"";
+        }).join(' ');
+        outputArr.push(" " + attribs);
     }
     if (tagWClasses.length > 1) {
         outputArr.push(" class=\"" + tagWClasses.slice(1).join(' ') + "\"");

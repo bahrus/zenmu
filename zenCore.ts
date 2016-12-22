@@ -1,6 +1,10 @@
 
 
 const numberDel = '$';
+export interface Loop<T>{
+    each: T[],
+    do: (t: T) => any
+}
 export function zen(strings : any, ...values){
     const sArr = strings as string[];
     const sArrWithSiblings = [];
@@ -28,20 +32,26 @@ const toDashLowerCase = function($1){return "-"+$1.toLowerCase();}
 function camelToSnake(str: string){
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
+const atSplitRegExp = /([^\\\][^@]|\\@)+/g;
+const scSplitRegExp = /([^\\\][^:]|\\:)+/g;
+
 function processTag(tag: string, outputArr: any[], values, fnInside){
     if(tag.length === 0) return;
     const tagWNumber = tag.split(numberDel);
     const tagWONumber = tagWNumber[0];
-    const tagWClasses = tagWONumber.split('.');
+    const tagWAttributes = tagWONumber.match(atSplitRegExp) || [''];
+    const tagWOAttributes = tagWAttributes[0]; 
+    const tagWClasses = tagWOAttributes.split('.');
     const tagWOClasses = tagWClasses[0];
-    const tagWBooleanAttributes = tagWOClasses.split('@');
-    const tagWOBooleanAttributes = tagWBooleanAttributes[0]; 
-    const tagWID = tagWOBooleanAttributes.split('#');
+    //const tagWAttributes = tagWOClasses.split('@');
+    
+    
+    const tagWID = tagWOClasses.split('#');
     const tagWOIDAndNoDiv = tagWID[0];
     const idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
     const val = idx > -1 ? values[idx] : undefined;
     if(tagWOIDAndNoDiv.length === 0){
-        if(tagWID.length === 1 && tagWClasses.length === 1 && tagWBooleanAttributes.length === 1){
+        if(tagWID.length === 1 && tagWClasses.length === 1 && tagWAttributes.length === 1){
           if(typeof val === 'undefined') return;
         }
     }
@@ -51,9 +61,13 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
         outputArr.push(` id="${tagWID[1]}"`);
     }
     
-    if(tagWBooleanAttributes.length > 1){
-        const booleanAttributes = tagWBooleanAttributes.slice(1).map(s=> camelToSnake(s)).join(' ');
-        outputArr.push(` ${booleanAttributes}`);
+    if(tagWAttributes.length > 1){
+        const attribs = tagWAttributes.slice(1).map(s=> {
+            const lhsRhs = s.match(scSplitRegExp);
+            const key = camelToSnake(lhsRhs[0]);
+            return lhsRhs.length === 1 ? key : `${key}="${lhsRhs[1]}"`;
+        }).join(' ');
+        outputArr.push(` ${attribs}`);
     }
     if(tagWClasses.length > 1){
         outputArr.push(` class="${tagWClasses.slice(1).join(' ')}"`)
