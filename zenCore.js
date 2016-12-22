@@ -45,7 +45,7 @@ function processTag(tag, outputArr, values, fnInside) {
     var tagWClasses = tagWOAttributes.split('.');
     var tagWOClasses = tagWClasses[0];
     //const tagWAttributes = tagWOClasses.split('@');
-    var tagWID = tagWOClasses.split('#');
+    var tagWID = tagWOClasses.split('#', 2);
     var tagWOIDAndNoDiv = tagWID[0];
     var idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
     var val = idx > -1 ? values[idx] : undefined;
