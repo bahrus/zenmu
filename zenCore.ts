@@ -1,6 +1,6 @@
 
 
-const numberDel = '$';
+const numberDel = '⏰';
 export interface Loop<T>{
     '➰': T[],
     '🎬': (t: T) => any,

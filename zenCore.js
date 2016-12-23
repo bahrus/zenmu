@@ -1,5 +1,5 @@
 "use strict";
-var numberDel = '$';
+var numberDel = '⏰';
 function zen(strings) {
     var values = [];
     for (var _i = 1; _i < arguments.length; _i++) {

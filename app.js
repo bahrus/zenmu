@@ -28,7 +28,6 @@ var test4 = (_d = ["ul                                   ", ""], _d.raw = ["ul  
         return (_a = ["li", ""], _a.raw = ["li", ""], zenCore_1.zen(_a, 'item ' + n));
         var _a;
     } }));
-debugger;
 var html4 = test4.join('');
 //console.log(html4);
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>');

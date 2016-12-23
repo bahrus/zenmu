@@ -36,7 +36,6 @@ const range = [1, 2, 3, 4, 5];
 type nLoop = Loop<number>;
 const test4 = zen `ul                                   ${{'➰': range, '🎬':n => zen 
                     `li${'item ' + n}`                  } as nLoop}`;
-debugger;
                     
 const html4 = test4.join('');
 //console.log(html4);
