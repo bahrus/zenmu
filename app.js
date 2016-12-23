@@ -24,10 +24,11 @@ var html3 = test3.join('');
 console.assert(html3 === "<a href=\"" + cnnURL + "\">" + cnnText + "</a>", 'test 3 failed');
 var range = [1, 2, 3, 4, 5];
 var test4 = (_d = ["ul                                   ", ""], _d.raw = ["ul                                   ",
-    ""], zenCore_1.zen(_d, { each: range, do: function (n) {
+    ""], zenCore_1.zen(_d, { '➰': range, '🎬': function (n) {
         return (_a = ["li", ""], _a.raw = ["li", ""], zenCore_1.zen(_a, 'item ' + n));
         var _a;
     } }));
+debugger;
 var html4 = test4.join('');
 console.log(html4);
 var _a, _b, _c, _d;

@@ -34,8 +34,10 @@ console.assert(html3 === `<a href="${cnnURL}">${cnnText}</a>`, 'test 3 failed');
 
 const range = [1, 2, 3, 4, 5];
 type nLoop = Loop<number>;
-const test4 = zen `ul                                   ${{each:range, do:n => zen 
-                    `li${'item ' + n}`                  }}`
+const test4 = zen `ul                                   ${{'➰': range, '🎬':n => zen 
+                    `li${'item ' + n}`                  } as nLoop}`;
+debugger;
+                    
 const html4 = test4.join('');
 console.log(html4);
 

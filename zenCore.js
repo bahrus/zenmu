@@ -33,8 +33,6 @@ var toDashLowerCase = function ($1) { return "-" + $1.toLowerCase(); };
 function camelToSnake(str) {
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
-//const atSplitRegExp = /([^\\\][^@]|\\@)+/g;
-//const scSplitRegExp = /([^\\\][^:]|\\:)+/g;
 var splitRegExps = {};
 function splitWithEscape(s, chr) {
     var reg = splitRegExps[chr];
@@ -53,12 +51,10 @@ function processTag(tag, outputArr, values, fnInside) {
         return;
     var tagWNumber = tag.split(numberDel);
     var tagWONumber = tagWNumber[0];
-    //const tagWAttributes = tagWONumber.match(atSplitRegExp) || [''];
     var tagWAttributes = splitWithEscape(tagWONumber, '@');
     var tagWOAttributes = tagWAttributes[0];
     var tagWClasses = tagWOAttributes.split('.');
     var tagWOClasses = tagWClasses[0];
-    //const tagWAttributes = tagWOClasses.split('@');
     var tagWID = tagWOClasses.split('#', 2);
     var tagWOIDAndNoDiv = tagWID[0];
     var idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
@@ -96,16 +92,23 @@ function processTag(tag, outputArr, values, fnInside) {
                 var props = val;
                 var content = null;
                 if (Array.isArray(val)) {
-                    // props = val[1];
-                    // content = val[0];
                     throw "Not Implemented";
                 }
+                var loop = void 0;
+                var action = void 0;
                 for (var key in props) {
                     var atV = props[key];
                     switch (key) {
+                        case '🎬':
+                            action = atV;
+                            break;
+                        case '➰':
+                            loop = atV;
+                            break;
                         case 'innerHTML':
                             content = atV;
                             break;
+                        //case 'each'
                         default:
                             switch (typeof atV) {
                                 case 'boolean':
@@ -119,6 +122,16 @@ function processTag(tag, outputArr, values, fnInside) {
                     }
                 }
                 outputArr.push('>');
+                if (loop && action) {
+                    for (var _i = 0, loop_1 = loop; _i < loop_1.length; _i++) {
+                        var item = loop_1[_i];
+                        var output = action(item);
+                        for (var _a = 0, output_1 = output; _a < output_1.length; _a++) {
+                            var oi = output_1[_a];
+                            outputArr.push(oi);
+                        }
+                    }
+                }
                 if (content) {
                     outputArr.push(content);
                 }

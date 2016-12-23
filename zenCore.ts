@@ -2,8 +2,8 @@
 
 const numberDel = '$';
 export interface Loop<T>{
-    each: T[],
-    do: (t: T) => any,
+    '➰': T[],
+    '🎬': (t: T) => any,
 }
 export function zen(strings : any, ...values){
     const sArr = strings as string[];
@@ -32,8 +32,6 @@ const toDashLowerCase = function($1){return "-"+$1.toLowerCase();}
 function camelToSnake(str: string){
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
-//const atSplitRegExp = /([^\\\][^@]|\\@)+/g;
-//const scSplitRegExp = /([^\\\][^:]|\\:)+/g;
 const splitRegExps: {[key: string]: RegExp} = {};
 function splitWithEscape(s: string, chr: string){
     let reg = splitRegExps[chr];
@@ -52,12 +50,10 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
     if(tag.length === 0) return;
     const tagWNumber = tag.split(numberDel);
     const tagWONumber = tagWNumber[0];
-    //const tagWAttributes = tagWONumber.match(atSplitRegExp) || [''];
     const tagWAttributes = splitWithEscape(tagWONumber, '@');
     const tagWOAttributes = tagWAttributes[0]; 
     const tagWClasses = tagWOAttributes.split('.');
     const tagWOClasses = tagWClasses[0];
-    //const tagWAttributes = tagWOClasses.split('@');
     
     
     const tagWID = tagWOClasses.split('#', 2);
@@ -98,16 +94,24 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                 let props = val;
                 let content = null;
                 if(Array.isArray(val)){
-                    // props = val[1];
-                    // content = val[0];
                     throw "Not Implemented";
                 }
+                let loop;
+                let action;
                 for(const key in props){
                     const atV = props[key];
                     switch(key){
+                        case '🎬':
+                            action = atV;
+                            break;
+                        case '➰':
+                            loop = atV;
+                            break;
+                        
                         case 'innerHTML':
                             content = atV;
                             break;
+                        //case 'each'
                         default:
                             switch(typeof atV){
                                 case 'boolean':
@@ -122,7 +126,16 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                     
                     
                 }
+                
                 outputArr.push('>');
+                if(loop && action){
+                    for(const item of loop){
+                        const output = action(item);
+                        for(const oi of output){
+                            outputArr.push(oi);
+                        }
+                    }
+                }
                 if(content){
                     outputArr.push(content);
                 }
