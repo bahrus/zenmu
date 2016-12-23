@@ -39,7 +39,8 @@ const test4 = zen `ul                                   ${{'➰': range, '🎬':
 debugger;
                     
 const html4 = test4.join('');
-console.log(html4);
+//console.log(html4);
+console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>');
 
 // const test5 = `<ul>                                     ${range.map(n =>`
 //                 <li>${'item ' + n}</li>

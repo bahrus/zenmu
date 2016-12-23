@@ -30,7 +30,8 @@ var test4 = (_d = ["ul                                   ", ""], _d.raw = ["ul  
     } }));
 debugger;
 var html4 = test4.join('');
-console.log(html4);
+//console.log(html4);
+console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>');
 var _a, _b, _c, _d;
 // const test5 = `<ul>                                     ${range.map(n =>`
 //                 <li>${'item ' + n}</li>
