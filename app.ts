@@ -1,4 +1,5 @@
 import {zen, Loop} from './zenCore';
+import {zenToPolymer1} from './zenPolymer1';
 
 interface IAttribs{
     myAttrib1: string,
@@ -40,6 +41,23 @@ const test4 = zen `ul                                   ${{'➰': range, '🎬':
 const html4 = test4.join('');
 //console.log(html4);
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>');
+
+//given on object, populate with unique identifiers
+
+const MyCustomElement = {
+    prop1:{
+        type: String,
+        uid: null
+    }
+}
+
+const obj = MyCustomElement;
+
+const test5 = zen `span${() => `Hello, ${obj.prop1.uid}, good day!`}`;
+zenToPolymer1(test5, obj);
+console.log(test5);
+const html5 = test5.join('');
+console.log(html5);
 
 // const test5 = `<ul>                                     ${range.map(n =>`
 //                 <li>${'item ' + n}</li>

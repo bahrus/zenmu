@@ -1,5 +1,6 @@
 "use strict";
 var zenCore_1 = require("./zenCore");
+var zenPolymer1_1 = require("./zenPolymer1");
 var test1 = (_a = [".myClass2>ul#myUL.myClass1@myAttrib1:val1@myAttrib2:42@myAttrib3>li", "+li", ""], _a.raw = [".myClass2>ul#myUL.myClass1@myAttrib1:val1@myAttrib2:42@myAttrib3>li", "+li", ""], zenCore_1.zen(_a, 'Hello, ', 'World.'));
 var html1 = test1.join('');
 //console.log(html1);
@@ -31,7 +32,20 @@ var test4 = (_d = ["ul                                   ", ""], _d.raw = ["ul  
 var html4 = test4.join('');
 //console.log(html4);
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>');
-var _a, _b, _c, _d;
+//given on object, populate with unique identifiers
+var MyCustomElement = {
+    prop1: {
+        type: String,
+        uid: null
+    }
+};
+var obj = MyCustomElement;
+var test5 = (_e = ["span", ""], _e.raw = ["span", ""], zenCore_1.zen(_e, function () { return "Hello, " + obj.prop1.uid + ", good day!"; }));
+zenPolymer1_1.zenToPolymer1(test5, obj);
+console.log(test5);
+var html5 = test5.join('');
+console.log(html5);
+var _a, _b, _c, _d, _e;
 // const test5 = `<ul>                                     ${range.map(n =>`
 //                 <li>${'item ' + n}</li>
 //                                                         `).join('')}

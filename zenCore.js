@@ -38,7 +38,6 @@ function splitWithEscape(s, chr) {
     var reg = splitRegExps[chr];
     if (!reg) {
         var r = "([^\\\\\\][^" + chr + "]|\\\\" + chr + ")+";
-        console.log(r);
         reg = new RegExp(r, 'g');
         splitRegExps[chr] = reg;
     }
@@ -135,6 +134,9 @@ function processTag(tag, outputArr, values, fnInside) {
                 if (content) {
                     outputArr.push(content);
                 }
+                break;
+            case 'function':
+                outputArr.push(val);
                 break;
         }
     }
