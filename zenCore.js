@@ -34,7 +34,7 @@ function camelToSnake(str) {
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
 //const atSplitRegExp = /([^\\\][^@]|\\@)+/g;
-var scSplitRegExp = /([^\\\][^:]|\\:)+/g;
+//const scSplitRegExp = /([^\\\][^:]|\\:)+/g;
 var splitRegExps = {};
 function splitWithEscape(s, chr) {
     var reg = splitRegExps[chr];
@@ -76,7 +76,8 @@ function processTag(tag, outputArr, values, fnInside) {
     }
     if (tagWAttributes.length > 1) {
         var attribs = tagWAttributes.slice(1).map(function (s) {
-            var lhsRhs = s.match(scSplitRegExp);
+            //const lhsRhs = s.match(scSplitRegExp);
+            var lhsRhs = splitWithEscape(s, ':');
             var key = camelToSnake(lhsRhs[0]);
             return lhsRhs.length === 1 ? key : key + "=\"" + lhsRhs[1] + "\"";
         }).join(' ');

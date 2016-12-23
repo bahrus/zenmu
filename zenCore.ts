@@ -33,7 +33,7 @@ function camelToSnake(str: string){
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
 //const atSplitRegExp = /([^\\\][^@]|\\@)+/g;
-const scSplitRegExp = /([^\\\][^:]|\\:)+/g;
+//const scSplitRegExp = /([^\\\][^:]|\\:)+/g;
 const splitRegExps: {[key: string]: RegExp} = {};
 function splitWithEscape(s: string, chr: string){
     let reg = splitRegExps[chr];
@@ -45,7 +45,7 @@ function splitWithEscape(s: string, chr: string){
     }
     const ret =  (' ' +s).match(reg);
     ret[0] = ret[0].substr(1);
-    return ret;
+    return ret as string[];
 }
 
 function processTag(tag: string, outputArr: any[], values, fnInside){
@@ -78,7 +78,8 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
     
     if(tagWAttributes.length > 1){
         const attribs = tagWAttributes.slice(1).map(s=> {
-            const lhsRhs = s.match(scSplitRegExp);
+            //const lhsRhs = s.match(scSplitRegExp);
+            const lhsRhs = splitWithEscape(s, ':');
             const key = camelToSnake(lhsRhs[0]);
             return lhsRhs.length === 1 ? key : `${key}="${lhsRhs[1]}"`;
         }).join(' ');
