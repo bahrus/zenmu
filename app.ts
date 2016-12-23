@@ -43,23 +43,37 @@ const html4 = test4.join('');
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>');
 
 //given on object, populate with unique identifiers
-
-const MyCustomElement = {
+interface IMyCustomElement1{
+    prop1: any;
+}
+const MyCustomElement1 = {
     prop1:{
         type: String,
         uid: null
     }
-}
+} as IMyCustomElement1;
 
-const obj = MyCustomElement;
+const obj = MyCustomElement1;
 
 const test5 = zen `span${() => `Hello, ${obj.prop1.uid}, good day!`}`;
 zenToPolymer1(test5, obj);
-console.log(test5);
+//console.log(test5);
 const html5 = test5.join('');
-console.log(html5);
+console.assert(html5 === '<span>Hello, {{prop1}}, good day!</span>');
 
-// const test5 = `<ul>                                     ${range.map(n =>`
-//                 <li>${'item ' + n}</li>
-//                                                         `).join('')}
-//                </ul>`
+
+interface IMyCustomElement2{
+    prop2: IMyCustomElement1[],
+}
+
+const MyCustomElement2 = {
+    prop2:[MyCustomElement1] as IMyCustomElement1[],
+} as IMyCustomElement2;
+
+interface ILoopTemplate<T>{
+    '➰': () => T[],
+    '🎬': (t: T) => any,
+}
+
+const test6 = zen `ul                                   ${{'➰': ()=>MyCustomElement2.prop2, '🎬':mce => zen 
+                    `li${'item ' + mce.prop1}`          }  as ILoopTemplate<IMyCustomElement1>}`;

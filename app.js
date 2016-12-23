@@ -32,22 +32,25 @@ var test4 = (_d = ["ul                                   ", ""], _d.raw = ["ul  
 var html4 = test4.join('');
 //console.log(html4);
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>');
-//given on object, populate with unique identifiers
-var MyCustomElement = {
+var MyCustomElement1 = {
     prop1: {
         type: String,
         uid: null
     }
 };
-var obj = MyCustomElement;
+var obj = MyCustomElement1;
 var test5 = (_e = ["span", ""], _e.raw = ["span", ""], zenCore_1.zen(_e, function () { return "Hello, " + obj.prop1.uid + ", good day!"; }));
 zenPolymer1_1.zenToPolymer1(test5, obj);
-console.log(test5);
+//console.log(test5);
 var html5 = test5.join('');
-console.log(html5);
-var _a, _b, _c, _d, _e;
-// const test5 = `<ul>                                     ${range.map(n =>`
-//                 <li>${'item ' + n}</li>
-//                                                         `).join('')}
-//                </ul>` 
+console.assert(html5 === '<span>Hello, {{prop1}}, good day!</span>');
+var MyCustomElement2 = {
+    prop2: [MyCustomElement1],
+};
+var test6 = (_f = ["ul                                   ", ""], _f.raw = ["ul                                   ",
+    ""], zenCore_1.zen(_f, { '➰': function () { return MyCustomElement2.prop2; }, '🎬': function (mce) {
+        return (_a = ["li", ""], _a.raw = ["li", ""], zenCore_1.zen(_a, 'item ' + mce.prop1));
+        var _a;
+    } }));
+var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=app.js.map
