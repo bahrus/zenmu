@@ -140,6 +140,7 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                 }
                 break;
             case 'function':
+                outputArr.push('>');
                 outputArr.push(val);
                 break;
         }

@@ -136,6 +136,7 @@ function processTag(tag, outputArr, values, fnInside) {
                 }
                 break;
             case 'function':
+                outputArr.push('>');
                 outputArr.push(val);
                 break;
         }
