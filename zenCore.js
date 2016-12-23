@@ -69,7 +69,7 @@ function processTag(tag, outputArr, values, fnInside) {
                 return;
         }
     }
-    var tagWOID = tagWOIDAndNoDiv || 'div';
+    var tagWOID = tagWOIDAndNoDiv ? tagWOIDAndNoDiv.trim() : 'div';
     outputArr.push('<' + tagWOID);
     if (tagWID.length > 1) {
         outputArr.push(" id=\"" + tagWID[1] + "\"");

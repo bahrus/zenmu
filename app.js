@@ -20,7 +20,19 @@ var cnnURL = "http://www.cnn.com";
 var cnnText = 'This is CNN';
 var test3 = (_c = ["a", ""], _c.raw = ["a", ""], zenCore_1.zen(_c, { href: cnnURL, innerHTML: cnnText }));
 var html3 = test3.join('');
-console.log(html3);
+//console.log(html3);
 console.assert(html3 === "<a href=\"" + cnnURL + "\">" + cnnText + "</a>", 'test 3 failed');
-var _a, _b, _c;
+var range = [1, 2, 3, 4, 5];
+var test4 = (_d = ["ul                                   ", ""], _d.raw = ["ul                                   ",
+    ""], zenCore_1.zen(_d, { each: range, do: function (n) {
+        return (_a = ["li", ""], _a.raw = ["li", ""], zenCore_1.zen(_a, 'item ' + n));
+        var _a;
+    } }));
+var html4 = test4.join('');
+console.log(html4);
+var _a, _b, _c, _d;
+// const test5 = `<ul>                                     ${range.map(n =>`
+//                 <li>${'item ' + n}</li>
+//                                                         `).join('')}
+//                </ul>` 
 //# sourceMappingURL=app.js.map

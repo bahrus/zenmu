@@ -3,7 +3,7 @@
 const numberDel = '$';
 export interface Loop<T>{
     each: T[],
-    do: (t: T) => any
+    do: (t: T) => any,
 }
 export function zen(strings : any, ...values){
     const sArr = strings as string[];
@@ -69,7 +69,8 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
           if(typeof val === 'undefined') return;
         }
     }
-    const tagWOID = tagWOIDAndNoDiv || 'div';
+    const tagWOID = tagWOIDAndNoDiv ? tagWOIDAndNoDiv.trim() : 'div';
+
     outputArr.push('<' + tagWOID);
     if(tagWID.length > 1){
         outputArr.push(` id="${tagWID[1]}"`);
