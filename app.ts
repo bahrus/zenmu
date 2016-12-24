@@ -39,41 +39,51 @@ const test4 = zen `ul                                   ${{'➰': range, '🎬':
                     `li${'item ' + n}`                  } as nLoop}`;
                     
 const html4 = test4.join('');
-//console.log(html4);
-console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>');
+console.log(html4);
+console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>', 'test 4 failed');
 
 //given on object, populate with unique identifiers
-interface IMyCustomElement1{
-    prop1: any;
+interface IProperty{
+    type: any,
+    uid?: string,
 }
-const MyCustomElement1 = {
-    prop1:{
+interface IPhotoElement{
+    imageSrc: IProperty,
+    caption: IProperty
+}
+
+const PhotoElement = {
+    imageSrc:{
         type: String,
-        uid: null
+    },
+    caption:{
+        type: String
     }
-} as IMyCustomElement1;
+} as IPhotoElement;
 
-const obj = MyCustomElement1;
+const obj = PhotoElement;
 
-const test5 = zen `span${() => `Hello, ${obj.prop1.uid}, good day!`}`;
+const test5 = zen `span${() => `Hello, ${obj.imageSrc.uid}, good day!`}`;
 zenToPolymer1(test5, obj);
-//console.log(test5);
+console.log(test5);
 const html5 = test5.join('');
-console.assert(html5 === '<span>Hello, {{prop1}}, good day!</span>');
+console.assert(html5 === '<span>Hello, {{imageSrc}}, good day!</span>', 'test 5 failed');
 
 
-interface IMyCustomElement2{
-    prop2: IMyCustomElement1[],
+interface IPhotoAlbum{
+    photos?: IPhotoElement[],
 }
 
-const MyCustomElement2 = {
-    prop2:[MyCustomElement1] as IMyCustomElement1[],
-} as IMyCustomElement2;
+const PhotoAlbum = {
+    photos:[PhotoElement],
+} as IPhotoAlbum;
 
 interface ILoopTemplate<T>{
     '➰': () => T[],
     '🎬': (t: T) => any,
 }
 
-const test6 = zen `ul                                   ${{'➰': ()=>MyCustomElement2.prop2, '🎬':mce => zen 
-                    `li${'item ' + mce.prop1}`          }  as ILoopTemplate<IMyCustomElement1>}`;
+const test6 = zen `ul                                   ${{'➰': ()=>PhotoAlbum.photos, '🎬':photo => zen 
+                    `li${'item ' + photo.imageSrc.uid}`          }  as ILoopTemplate<IPhotoElement>}`;
+
+console.log(test6);

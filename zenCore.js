@@ -122,13 +122,19 @@ function processTag(tag, outputArr, values, fnInside) {
                 }
                 outputArr.push('>');
                 if (loop && action) {
-                    for (var _i = 0, loop_1 = loop; _i < loop_1.length; _i++) {
-                        var item = loop_1[_i];
-                        var output = action(item);
-                        for (var _a = 0, output_1 = output; _a < output_1.length; _a++) {
-                            var oi = output_1[_a];
-                            outputArr.push(oi);
-                        }
+                    switch (typeof loop) {
+                        case 'function':
+                            outputArr.push('iah');
+                            break;
+                        default:
+                            for (var _i = 0, loop_1 = loop; _i < loop_1.length; _i++) {
+                                var item = loop_1[_i];
+                                var output = action(item);
+                                for (var _a = 0, output_1 = output; _a < output_1.length; _a++) {
+                                    var oi = output_1[_a];
+                                    outputArr.push(oi);
+                                }
+                            }
                     }
                 }
                 if (content) {

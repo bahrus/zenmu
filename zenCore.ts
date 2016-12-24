@@ -128,12 +128,19 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                 
                 outputArr.push('>');
                 if(loop && action){
-                    for(const item of loop){
-                        const output = action(item);
-                        for(const oi of output){
-                            outputArr.push(oi);
-                        }
+                    switch(typeof loop){
+                        case 'function':
+                            outputArr.push('iah');
+                            break;
+                        default:
+                            for(const item of loop){
+                                const output = action(item);
+                                for(const oi of output){
+                                    outputArr.push(oi);
+                                }
+                            }
                     }
+                    
                 }
                 if(content){
                     outputArr.push(content);
