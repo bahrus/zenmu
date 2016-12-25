@@ -1,5 +1,5 @@
 import {zen, Loop} from './zenCore';
-import {zenToPolymer1} from './zenPolymer1';
+import {zenToPolymer1, flattenArray} from './zenPolymer1';
 
 interface IAttribs{
     myAttrib1: string,
@@ -88,4 +88,7 @@ const test6 = zen `ul                                   ${{'➰': (p: IPhotoAlbu
 
 
 zenToPolymer1(test6, PhotoAlbum);
-console.log(test6);
+const flattenedTest6 = [];
+flattenArray(test6, flattenedTest6);
+const html6 = flattenedTest6.join('');
+console.log(html6);

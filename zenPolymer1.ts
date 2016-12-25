@@ -77,8 +77,29 @@ export function zenToPolymer1(zen: any[], obj, path=''){
                     outputArr.push(child);
                 }
                 outputArr.push('</template>');
-                zen[i] = outputArr.join('');
+                //zen[i] = outputArr.join('');
+                zen[i] = outputArr;
                 break;
+        }
+    }
+
+
+
+}
+
+export function flattenArray(arr: any[], cumm: any[]){
+    for(const el of arr){
+        switch(typeof el){
+            case 'string':
+                cumm.push(el);
+                break;
+            case 'object':
+                if(Array.isArray(el)){
+                    flattenArray(el, cumm);
+                }else{
+                    throw "Not Implemented"
+                }
+
         }
     }
 }

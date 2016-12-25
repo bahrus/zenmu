@@ -55,6 +55,9 @@ var test6 = (_f = ["ul                                   ", ""], _f.raw = ["ul  
         var _a;
     } }));
 zenPolymer1_1.zenToPolymer1(test6, PhotoAlbum);
-console.log(test6);
+var flattenedTest6 = [];
+zenPolymer1_1.flattenArray(test6, flattenedTest6);
+var html6 = flattenedTest6.join('');
+console.log(html6);
 var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=app.js.map

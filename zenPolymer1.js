@@ -82,10 +82,29 @@ function zenToPolymer1(zen, obj, path) {
                     outputArr.push(child);
                 }
                 outputArr.push('</template>');
-                zen[i] = outputArr.join('');
+                //zen[i] = outputArr.join('');
+                zen[i] = outputArr;
                 break;
         }
     }
 }
 exports.zenToPolymer1 = zenToPolymer1;
+function flattenArray(arr, cumm) {
+    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+        var el = arr_1[_i];
+        switch (typeof el) {
+            case 'string':
+                cumm.push(el);
+                break;
+            case 'object':
+                if (Array.isArray(el)) {
+                    flattenArray(el, cumm);
+                }
+                else {
+                    throw "Not Implemented";
+                }
+        }
+    }
+}
+exports.flattenArray = flattenArray;
 //# sourceMappingURL=zenPolymer1.js.map
