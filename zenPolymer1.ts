@@ -58,6 +58,14 @@ export function zenToPolymer1(zen: any[], obj){
                 const outputArr = [];
                 const repeatSelector = extractPathFromFunction (loop.toString());
                 outputArr.push(`<template is="dom-repeat" repeat="{{${repeatSelector}}}">`);
+                //debugger;
+                const loopVal = loop(obj);
+                const firstItem = loopVal[0];
+                const zen1 = action(firstItem);
+                zenToPolymer1(zen1, firstItem);
+                for(const child of zen1){
+                    outputArr.push(zen1);
+                }
                 outputArr.push('</template>');
                 zen[i] = outputArr.join('');
                 break;

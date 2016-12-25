@@ -61,6 +61,15 @@ function zenToPolymer1(zen, obj) {
                 var outputArr = [];
                 var repeatSelector = extractPathFromFunction(loop.toString());
                 outputArr.push("<template is=\"dom-repeat\" repeat=\"{{" + repeatSelector + "}}\">");
+                //debugger;
+                var loopVal = loop(obj);
+                var firstItem = loopVal[0];
+                var zen1 = action(firstItem);
+                zenToPolymer1(zen1, firstItem);
+                for (var _i = 0, zen1_1 = zen1; _i < zen1_1.length; _i++) {
+                    var child = zen1_1[_i];
+                    outputArr.push(zen1);
+                }
                 outputArr.push('</template>');
                 zen[i] = outputArr.join('');
                 break;
