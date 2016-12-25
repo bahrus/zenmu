@@ -13,13 +13,22 @@ function populateGUIds(obj){
         obj[name].uid = guid();
     }
 }
-function replaceGUIDsWithPolymerSelector(s: string, obj){
-    const names = Object.getOwnPropertyNames(obj);
-    let returnS = s;
-    for(const name of names){
-        returnS = returnS.replace(obj[name].uid, `{{${name}}}`);
+function replaceGUIDsWithPolymerSelector(s: any, obj, path: string = ''){
+    switch(typeof s){
+        case 'string':
+            const names = Object.getOwnPropertyNames(obj);
+            let returnS = s;
+            for(const name of names){
+                returnS = returnS.replace(obj[name].uid, `[[${path + (path ? '.' : '') + name}]]`);
+            }
+            return returnS;
+        case 'object':
+            if(Array.isArray(s)){
+                return s.map(part => replaceGUIDsWithPolymerSelector(part, obj, path));
+            }
+            throw "Not Implemented";
     }
-    return returnS;
+    
 }
 function extractPathFromFunction(s: string){
     const returnSplit = s.split('return ', 2);
@@ -41,14 +50,14 @@ function substringAfter(s: string, search: string){
     return s.substr(iPos + 1);
 }
 
-export function zenToPolymer1(zen: any[], obj){
+export function zenToPolymer1(zen: any[], obj, path=''){
     populateGUIds(obj);
     for(let i = 0, ii = zen.length; i < ii; i++){
         const word = zen[i];
         switch(typeof word){
             case 'function':
                 const evalledFunction = word(obj);
-                const polymerExpr = replaceGUIDsWithPolymerSelector(evalledFunction, obj);
+                const polymerExpr = replaceGUIDsWithPolymerSelector(evalledFunction, obj, path);
                 zen[i] = polymerExpr;
                 break;
             case 'object':
@@ -57,14 +66,15 @@ export function zenToPolymer1(zen: any[], obj){
                 if(!loop || !action) throw "Not Implemented";
                 const outputArr = [];
                 const repeatSelector = extractPathFromFunction (loop.toString());
-                outputArr.push(`<template is="dom-repeat" repeat="{{${repeatSelector}}}">`);
-                //debugger;
+                outputArr.push(`<template is="dom-repeat" items="{{${repeatSelector}}}">`);
                 const loopVal = loop(obj);
                 const firstItem = loopVal[0];
-                const zen1 = action(firstItem);
-                zenToPolymer1(zen1, firstItem);
-                for(const child of zen1){
-                    outputArr.push(zen1);
+                const actionSeq = [action];
+                zenToPolymer1(actionSeq, firstItem, "item");
+                //const zen1 = action(firstItem);
+                //zenToPolymer1(zen1, firstItem);
+                for(const child of actionSeq){
+                    outputArr.push(child);
                 }
                 outputArr.push('</template>');
                 zen[i] = outputArr.join('');

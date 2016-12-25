@@ -67,7 +67,7 @@ const test5 = zen `span${() => `Hello, ${obj.imageSrc.uid}, good day!`}`;
 zenToPolymer1(test5, obj);
 console.log(test5);
 const html5 = test5.join('');
-console.assert(html5 === '<span>Hello, {{imageSrc}}, good day!</span>', 'test 5 failed');
+console.assert(html5 === '<span>Hello, [[imageSrc]], good day!</span>', 'test 5 failed');
 
 
 interface IPhotoAlbum{
@@ -84,7 +84,7 @@ interface ILoopTemplate<T>{
 }
 
 const test6 = zen `ul                                   ${{'➰': (p: IPhotoAlbum) => p.photos, '🎬':photo => zen 
-                    `li${'item ' + photo.imageSrc.uid}`          }  as ILoopTemplate<IPhotoElement>}`;
+                    `li${'photo ' + photo.imageSrc.uid}`          }  as ILoopTemplate<IPhotoElement>}`;
 
 
 zenToPolymer1(test6, PhotoAlbum);

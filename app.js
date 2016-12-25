@@ -45,13 +45,13 @@ var test5 = (_e = ["span", ""], _e.raw = ["span", ""], zenCore_1.zen(_e, functio
 zenPolymer1_1.zenToPolymer1(test5, obj);
 console.log(test5);
 var html5 = test5.join('');
-console.assert(html5 === '<span>Hello, {{imageSrc}}, good day!</span>', 'test 5 failed');
+console.assert(html5 === '<span>Hello, [[imageSrc]], good day!</span>', 'test 5 failed');
 var PhotoAlbum = {
     photos: [PhotoElement],
 };
 var test6 = (_f = ["ul                                   ", ""], _f.raw = ["ul                                   ",
     ""], zenCore_1.zen(_f, { '➰': function (p) { return p.photos; }, '🎬': function (photo) {
-        return (_a = ["li", ""], _a.raw = ["li", ""], zenCore_1.zen(_a, 'item ' + photo.imageSrc.uid));
+        return (_a = ["li", ""], _a.raw = ["li", ""], zenCore_1.zen(_a, 'photo ' + photo.imageSrc.uid));
         var _a;
     } }));
 zenPolymer1_1.zenToPolymer1(test6, PhotoAlbum);

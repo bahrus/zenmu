@@ -13,14 +13,23 @@ function populateGUIds(obj) {
         obj[name_1].uid = guid();
     }
 }
-function replaceGUIDsWithPolymerSelector(s, obj) {
-    var names = Object.getOwnPropertyNames(obj);
-    var returnS = s;
-    for (var _i = 0, names_2 = names; _i < names_2.length; _i++) {
-        var name_2 = names_2[_i];
-        returnS = returnS.replace(obj[name_2].uid, "{{" + name_2 + "}}");
+function replaceGUIDsWithPolymerSelector(s, obj, path) {
+    if (path === void 0) { path = ''; }
+    switch (typeof s) {
+        case 'string':
+            var names = Object.getOwnPropertyNames(obj);
+            var returnS = s;
+            for (var _i = 0, names_2 = names; _i < names_2.length; _i++) {
+                var name_2 = names_2[_i];
+                returnS = returnS.replace(obj[name_2].uid, "[[" + (path + (path ? '.' : '') + name_2) + "]]");
+            }
+            return returnS;
+        case 'object':
+            if (Array.isArray(s)) {
+                return s.map(function (part) { return replaceGUIDsWithPolymerSelector(part, obj, path); });
+            }
+            throw "Not Implemented";
     }
-    return returnS;
 }
 function extractPathFromFunction(s) {
     var returnSplit = s.split('return ', 2);
@@ -43,14 +52,15 @@ function substringAfter(s, search) {
         return '';
     return s.substr(iPos + 1);
 }
-function zenToPolymer1(zen, obj) {
+function zenToPolymer1(zen, obj, path) {
+    if (path === void 0) { path = ''; }
     populateGUIds(obj);
     for (var i = 0, ii = zen.length; i < ii; i++) {
         var word = zen[i];
         switch (typeof word) {
             case 'function':
                 var evalledFunction = word(obj);
-                var polymerExpr = replaceGUIDsWithPolymerSelector(evalledFunction, obj);
+                var polymerExpr = replaceGUIDsWithPolymerSelector(evalledFunction, obj, path);
                 zen[i] = polymerExpr;
                 break;
             case 'object':
@@ -60,15 +70,16 @@ function zenToPolymer1(zen, obj) {
                     throw "Not Implemented";
                 var outputArr = [];
                 var repeatSelector = extractPathFromFunction(loop.toString());
-                outputArr.push("<template is=\"dom-repeat\" repeat=\"{{" + repeatSelector + "}}\">");
-                //debugger;
+                outputArr.push("<template is=\"dom-repeat\" items=\"{{" + repeatSelector + "}}\">");
                 var loopVal = loop(obj);
                 var firstItem = loopVal[0];
-                var zen1 = action(firstItem);
-                zenToPolymer1(zen1, firstItem);
-                for (var _i = 0, zen1_1 = zen1; _i < zen1_1.length; _i++) {
-                    var child = zen1_1[_i];
-                    outputArr.push(zen1);
+                var actionSeq = [action];
+                zenToPolymer1(actionSeq, firstItem, "item");
+                //const zen1 = action(firstItem);
+                //zenToPolymer1(zen1, firstItem);
+                for (var _i = 0, actionSeq_1 = actionSeq; _i < actionSeq_1.length; _i++) {
+                    var child = actionSeq_1[_i];
+                    outputArr.push(child);
                 }
                 outputArr.push('</template>');
                 zen[i] = outputArr.join('');
