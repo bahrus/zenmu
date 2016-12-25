@@ -124,7 +124,11 @@ function processTag(tag, outputArr, values, fnInside) {
                 if (loop && action) {
                     switch (typeof loop) {
                         case 'function':
-                            outputArr.push('iah');
+                            var loopInfo = {
+                                '➰': loop,
+                                '🎬': action,
+                            };
+                            outputArr.push(loopInfo);
                             break;
                         default:
                             for (var _i = 0, loop_1 = loop; _i < loop_1.length; _i++) {

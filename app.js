@@ -50,10 +50,11 @@ var PhotoAlbum = {
     photos: [PhotoElement],
 };
 var test6 = (_f = ["ul                                   ", ""], _f.raw = ["ul                                   ",
-    ""], zenCore_1.zen(_f, { '➰': function () { return PhotoAlbum.photos; }, '🎬': function (photo) {
+    ""], zenCore_1.zen(_f, { '➰': function (p) { return p.photos; }, '🎬': function (photo) {
         return (_a = ["li", ""], _a.raw = ["li", ""], zenCore_1.zen(_a, 'item ' + photo.imageSrc.uid));
         var _a;
     } }));
+zenPolymer1_1.zenToPolymer1(test6, PhotoAlbum);
 console.log(test6);
 var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=app.js.map

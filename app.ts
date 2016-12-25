@@ -83,7 +83,9 @@ interface ILoopTemplate<T>{
     '🎬': (t: T) => any,
 }
 
-const test6 = zen `ul                                   ${{'➰': ()=>PhotoAlbum.photos, '🎬':photo => zen 
+const test6 = zen `ul                                   ${{'➰': (p: IPhotoAlbum) => p.photos, '🎬':photo => zen 
                     `li${'item ' + photo.imageSrc.uid}`          }  as ILoopTemplate<IPhotoElement>}`;
 
+
+zenToPolymer1(test6, PhotoAlbum);
 console.log(test6);

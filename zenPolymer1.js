@@ -22,6 +22,27 @@ function replaceGUIDsWithPolymerSelector(s, obj) {
     }
     return returnS;
 }
+function extractPathFromFunction(s) {
+    var returnSplit = s.split('return ', 2);
+    var rhs = returnSplit[1];
+    var reg = /[;}\s]$/g;
+    var words = rhs.replace(/[\;\s}]/g, '');
+    return substringAfter(words, '.');
+}
+function substringBefore(s, search) {
+    var iPos = s.indexOf(search);
+    if (iPos > -1)
+        return s.substr(0, iPos);
+    return s;
+}
+function substringAfter(s, search) {
+    var iPos = s.indexOf(search);
+    if (iPos === -1)
+        return '';
+    if (iPos === s.length - 1)
+        return '';
+    return s.substr(iPos + 1);
+}
 function zenToPolymer1(zen, obj) {
     populateGUIds(obj);
     for (var i = 0, ii = zen.length; i < ii; i++) {
@@ -31,6 +52,17 @@ function zenToPolymer1(zen, obj) {
                 var evalledFunction = word(obj);
                 var polymerExpr = replaceGUIDsWithPolymerSelector(evalledFunction, obj);
                 zen[i] = polymerExpr;
+                break;
+            case 'object':
+                var loop = word['➰'];
+                var action = word['🎬'];
+                if (!loop || !action)
+                    throw "Not Implemented";
+                var outputArr = [];
+                var repeatSelector = extractPathFromFunction(loop.toString());
+                outputArr.push("<template is=\"dom-repeat\" repeat=\"{{" + repeatSelector + "}}\">");
+                outputArr.push('</template>');
+                zen[i] = outputArr.join('');
                 break;
         }
     }

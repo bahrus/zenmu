@@ -130,7 +130,11 @@ function processTag(tag: string, outputArr: any[], values, fnInside){
                 if(loop && action){
                     switch(typeof loop){
                         case 'function':
-                            outputArr.push('iah');
+                            const loopInfo : Loop<any> = {
+                               '➰': loop,
+                                '🎬':action,
+                            }
+                            outputArr.push(loopInfo);
                             break;
                         default:
                             for(const item of loop){
