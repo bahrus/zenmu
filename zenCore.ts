@@ -5,6 +5,10 @@ export interface Loop<T>{
     '➰': T[],
     '🎬': (t: T) => any,
 }
+export interface LoopTemplate<TItemContainer, TItem>{
+    '➰': (t: TItemContainer) => TItem[],
+    '🎬': (t: TItem) => any,
+}
 export function zen(strings : any, ...values){
     const sArr = strings as string[];
     const sArrWithSiblings = [];

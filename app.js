@@ -49,7 +49,7 @@ console.assert(html5 === '<span>Hello, [[imageSrc]], good day!</span>', 'test 5 
 var PhotoAlbum = {
     photos: [PhotoElement],
 };
-var test6 = (_f = ["ul                                   ", ""], _f.raw = ["ul                                   ",
+var test6 = (_f = ["ul                                       ", ""], _f.raw = ["ul                                       ",
     ""], zenCore_1.zen(_f, { '➰': function (p) { return p.photos; }, '🎬': function (photo) {
         return (_a = ["li", ""], _a.raw = ["li", ""], zenCore_1.zen(_a, 'photo ' + photo.imageSrc.uid));
         var _a;

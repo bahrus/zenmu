@@ -1,4 +1,4 @@
-import {zen, Loop} from './zenCore';
+import {zen, Loop, LoopTemplate} from './zenCore';
 import {zenToPolymer1, flattenArray} from './zenPolymer1';
 
 interface IAttribs{
@@ -78,13 +78,9 @@ const PhotoAlbum = {
     photos:[PhotoElement],
 } as IPhotoAlbum;
 
-interface ILoopTemplate<T>{
-    '➰': () => T[],
-    '🎬': (t: T) => any,
-}
 
-const test6 = zen `ul                                   ${{'➰': p => p.photos, '🎬':photo => zen 
-                    `li${'photo ' + photo.imageSrc.uid}`          }  as ILoopTemplate<IPhotoElement>}`;
+const test6 = zen `ul                                       ${{'➰': p => p.photos, '🎬':photo => zen 
+                    `li${'photo ' + photo.imageSrc.uid}`    }  as LoopTemplate<IPhotoAlbum, IPhotoElement>}`;
 
 
 zenToPolymer1(test6, PhotoAlbum);
