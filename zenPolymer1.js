@@ -90,6 +90,7 @@ function zenToPolymer1(zen, obj, path) {
 }
 exports.zenToPolymer1 = zenToPolymer1;
 function flattenArray(arr, cumm) {
+    if (cumm === void 0) { cumm = []; }
     for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
         var el = arr_1[_i];
         switch (typeof el) {
@@ -105,6 +106,7 @@ function flattenArray(arr, cumm) {
                 }
         }
     }
+    return cumm;
 }
 exports.flattenArray = flattenArray;
 //# sourceMappingURL=zenPolymer1.js.map

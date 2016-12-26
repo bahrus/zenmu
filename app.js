@@ -30,7 +30,7 @@ var test4 = (_d = ["ul                                   ", ""], _d.raw = ["ul  
         var _a;
     } }));
 var html4 = test4.join('');
-console.log(html4);
+//console.log(html4);
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>', 'test 4 failed');
 var PhotoElement = {
     imageSrc: {
@@ -43,7 +43,7 @@ var PhotoElement = {
 var obj = PhotoElement;
 var test5 = (_e = ["span", ""], _e.raw = ["span", ""], zenCore_1.zen(_e, function () { return "Hello, " + obj.imageSrc.uid + ", good day!"; }));
 zenPolymer1_1.zenToPolymer1(test5, obj);
-console.log(test5);
+//console.log(test5);
 var html5 = test5.join('');
 console.assert(html5 === '<span>Hello, [[imageSrc]], good day!</span>', 'test 5 failed');
 var PhotoAlbum = {
@@ -55,9 +55,9 @@ var test6 = (_f = ["ul                                   ", ""], _f.raw = ["ul  
         var _a;
     } }));
 zenPolymer1_1.zenToPolymer1(test6, PhotoAlbum);
-var flattenedTest6 = [];
-zenPolymer1_1.flattenArray(test6, flattenedTest6);
+var flattenedTest6 = zenPolymer1_1.flattenArray(test6);
 var html6 = flattenedTest6.join('');
-console.log(html6);
+//console.log(html6);
+console.assert(html6 === '<ul><template is="dom-repeat" items="{{photos}}"><li>photo [[item.imageSrc]]</li></template></ul>');
 var _a, _b, _c, _d, _e, _f;
 //# sourceMappingURL=app.js.map

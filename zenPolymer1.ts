@@ -87,7 +87,7 @@ export function zenToPolymer1(zen: any[], obj, path=''){
 
 }
 
-export function flattenArray(arr: any[], cumm: any[]){
+export function flattenArray(arr: any[], cumm: any[] = []){
     for(const el of arr){
         switch(typeof el){
             case 'string':
@@ -102,4 +102,5 @@ export function flattenArray(arr: any[], cumm: any[]){
 
         }
     }
+    return cumm;
 }

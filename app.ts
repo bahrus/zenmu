@@ -39,7 +39,7 @@ const test4 = zen `ul                                   ${{'➰': range, '🎬':
                     `li${'item ' + n}`                  } as nLoop}`;
                     
 const html4 = test4.join('');
-console.log(html4);
+//console.log(html4);
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>', 'test 4 failed');
 
 //given on object, populate with unique identifiers
@@ -65,7 +65,7 @@ const obj = PhotoElement;
 
 const test5 = zen `span${() => `Hello, ${obj.imageSrc.uid}, good day!`}`;
 zenToPolymer1(test5, obj);
-console.log(test5);
+//console.log(test5);
 const html5 = test5.join('');
 console.assert(html5 === '<span>Hello, [[imageSrc]], good day!</span>', 'test 5 failed');
 
@@ -83,12 +83,13 @@ interface ILoopTemplate<T>{
     '🎬': (t: T) => any,
 }
 
-const test6 = zen `ul                                   ${{'➰': (p: IPhotoAlbum) => p.photos, '🎬':photo => zen 
+const test6 = zen `ul                                   ${{'➰': p => p.photos, '🎬':photo => zen 
                     `li${'photo ' + photo.imageSrc.uid}`          }  as ILoopTemplate<IPhotoElement>}`;
 
 
 zenToPolymer1(test6, PhotoAlbum);
-const flattenedTest6 = [];
-flattenArray(test6, flattenedTest6);
+
+const flattenedTest6 = flattenArray(test6);
 const html6 = flattenedTest6.join('');
-console.log(html6);
+//console.log(html6);
+console.assert(html6 === '<ul><template is="dom-repeat" items="{{photos}}"><li>photo [[item.imageSrc]]</li></template></ul>');
