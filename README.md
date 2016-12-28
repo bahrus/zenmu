@@ -2,7 +2,7 @@
 
 zen mu is a markup language for HTML,  inspired by the compact [Emmet abbreviation syntax] (http://docs.emmet.io/cheat-sheet/).  Emmet was formally known as [zen coding] (https://www.smashingmagazine.com/2013/03/goodbye-zen-coding-hello-emmet/).  
 
-Zenmu provides a tag library function which parses the compact syntax and expands the syntax into full HTML.
+Zen mu provides a tag library function which parses the compact syntax and expands the syntax into full HTML, or rather, a kind of abstract syntax tree that is easily converted to HTML, but which can generate dynamic html generators based on existing frameworks as well.
 
 An example of what this looks like is as follows:
 
@@ -11,7 +11,7 @@ const helloWorld = zen `.myClass2>ul#myUL.myClass1@myAttrib1:val1@myAttrib2:42@m
 console.log(helloWorld.join(''));
 ```
 
-generates
+generates (sans line feed formatting):
 
 ```HTML
 <div class="myClass2">
@@ -22,27 +22,30 @@ generates
 </div>
 ```
 
-Whereas Emmet's purpose is to reduce key strokes while typing up a html compliant web page, by providing a transient syntax, zen mu's is slightly different.  It is meant to provide a permament compact format for actually defining the html markup, taking advantage of the power of JavaScript's template literals.
+Whereas Emmet's purpose is to reduce key strokes while typing up an html compliant web page, Zen Mu's goals are slightly different.  It is meant to provide a *permament* compact format for actually defining the html markup during run time or build time, taking advantage of the power of JavaScript's template literals.
 
 Why would we want to do this?  
 
-There used to be something approaching a consensus in the web development community that a web page's semantic UI should be defined by declarative HTML markup files, styling should be defined separately via declarative css files, and the role of JavaScript was to enhance the declarative markup with code, when the functionality exceeded what was available from the browser.
+There used to be something approaching a consensus in the web development community that a web page's semantic UI should be defined by declarative HTML markup files -- static files, or said files enhanced with non intrusive dynamic formatting instructions.  Styling should be defined separately via declarative css files.  In this view, the role of writing new JavaScript (or server side rendering languages) was limited to enhancing the declarative markup, when the functionality exceeded what was available from the browser or previous encapsulated tags / attributes.  
 
-But the recent popularity of JSX syntax-based libraries and frameworks, as well as frameworks that (optionally) utilize template literals (recently introduced in ES6) to define the UI, has challenged that assumption.  It remains to be seen if a new consensus will eventually emerge on what the right balance of these alternative approaches is.
+But the recent popularity of JSX syntax-based libraries and frameworks, as well as frameworks that (optionally) utilize template literals (recently introduced in ES6) to define the UI, has challenged that assumption.  It remains to be seen if a new consensus will eventually emerge on what is the right balance of these alternative approaches of defining the UI for web applications.
 
-It seems likely that as long as browsers are optimized to parse HTML, rather than detecting HTML embedded within JavaScript, the usefulness of fully defined html pages will not go away.
+One thing that seems reasonably likely is that as long as browsers are optimized to parse HTML, rather than detecting HTML embedded within JavaScript, the usefulness of fully defined html pages will not go away.
 
-Indeed, careful analysis of [how best to provide a lightning fast mobile web app] (https://hackernoon.com/10-things-i-learned-making-the-fastest-site-in-the-world-18a0e1cdf4a7#.3x16pd7np) suggest that really, the HTML markup is becomeing a *build/compile-time target* of these libraries (combined with a functional representation of how to dynamically update the dom once rendered based on user interation and other events).
+Indeed, careful analysis of [how best to provide a lightning fast mobile web app] (https://hackernoon.com/10-things-i-learned-making-the-fastest-site-in-the-world-18a0e1cdf4a7#.3x16pd7np) suggests that really, the HTML markup is still the most viable *build/compile-time target* of these libraries (combined with a functional representation of how to dynamically update the dom once rendered based on user interation and other events).
 
-It is arguable whether JSX is a preferable "markup syntax" to support, rather than HTML.  Some popular libraries like [Vue.js don't take this view] (https://vuejs.org/v2/guide/render-function.html), viewing JSX's ability to tap into the power of JavaScript,  as something that can help in limited circumstances only. This seems to be a reasonable point of view. 
+It is arguable whether JSX is a preferable "markup syntax" to support, rather than HTML.  
 
-But it is the view of zen mu, that for these limited circumstances where the power of JavaScript can help, that the full xml-compliant syntax of HTML embedded in JavaScript doesn't really help, and just bogs the JavaScript down. 
+Some popular libraries like [Vue.js take a dim view of this role for JavaScript] (https://vuejs.org/v2/guide/render-function.html).  Vue.js recognize JSX's ability to tap into the power of JavaScript,  as something that can help in limited circumstances. This seems to be a reasonable point of view.
 
-Zen mu's primary purpose is to provide a developer maintained, compact markup source, which, together with custom libraries, can be used to target varous libraries in an optimized way, including Polymer.js, JSX, etc, even from the same source definition.
+Others view the various HTML extended templating syntaxes, like those found in Polymer, Vue, Angular, Aurelia as contrived or "magical", preferring the more powerful JavaScript-like syntax of JSX, or true JavaScript power of the standardized template literals, perhaps combined with the tooling and build time checks that Typescript or other typed systems provide. 
 
-People are currently more used to reading HTML over Emmet, even inside JavaScript files, especially when tools provide familiar HTML syntax highlighting and autocomplete assistance.
+But it is the view of zen mu, that for those possibly limited circumstances where the power of JavaScript is needed, that the full xml-compliant syntax of HTML embedded in JavaScript doesn't really help, and just bogs the JavaScript down. 
 
-But we believe with sufficient training and future enhancements to tools, working with emmet-like syntax can become as familiar, and arguably more productive, given the brevity of the syntax.
+Zen mu's primary purpose is to provide a compact markup source, natural to the developer after enough exposure, which, together with custom libraries, can be used to target various consumers in an optimized way.  Targets of the transformation could include static web site publishing, or template generated environments like Polymer.js, JSX, etc.  It is conceivable that one could start from the same source definition, and transform to multiple such environments, allowing consumers of the definition to pick whichever they prefer.
 
-Another potential use of zen mu might be in reducing the amount of (gzipped, minified) HTML markup that needs to be downloaded to the browser. However, this needs to be carefully weight against the additional cost of downloading the zen mu library, and the time needed by JavaScript execution to expand the notation into full HTML, before passing the HTML to the browser.  
+Another potential use of zen mu might be in reducing the amount of (gzipped, minified) HTML markup that needs to be downloaded to the browser. However, this needs to be carefully weighed against the additional cost of downloading the zen mu library, and the time needed by JavaScript execution to expand the notation into full HTML, before passing the HTML to the browser.  
 
+On the other hand, for those circumstances where the power of JavaScript is truly the best fit for a significant amount of markup definition, even during runtime in the browser, zen mu could find a role in reducing the bandwidth and parsing requirements incurred by larger amounts of markup.
+
+Zen mu could also be used on the server side, as a potential competitor with other HTML simplifying languages, like Jade.
