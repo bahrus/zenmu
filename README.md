@@ -54,7 +54,7 @@ Zen mu could also be used on the server side, as a potential competitor with oth
 
 ##Syntax via examples##
 
-###Example 1.  ###
+### Example 1. 
 
 ```JavaScript
 zen `.myClass2>ul#myUL.myClass1@myAttrib1:val1@myAttrib2:42@myAttrib3>li${'Hello, '}+li${'World.'}`
@@ -82,7 +82,7 @@ generates:
   '</div>' ]
 ```
 
-###Eample 2.  Variable binding.###
+### Example 2.  Variable binding.
 ```JavaScript
 const cnnURL = 'http://www.cnn.com';
 const cnnText = 'This is CNN';
@@ -95,7 +95,7 @@ generates:
 [ '<a', ' href="http://www.cnn.com"', '>', 'This is CNN', '</a>' ]
 ```
 
-###Example 3. Loop generation
+### Example 3. Loop generation
 
 ```JavaScript
 const range = [1, 2, 3, 4, 5];
