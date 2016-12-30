@@ -38,7 +38,7 @@ console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>i
 //given on object, populate with unique identifiers
 interface IProperty{
     type: any,
-    uid?: string,
+    //uid?: string,
 }
 interface IPhotoElement{
     imageSrc: IProperty,
@@ -54,10 +54,8 @@ const PhotoElement = {
     }
 } as IPhotoElement;
 
-const obj = PhotoElement;
-
-const test5 = zen `span${() => `Hello, ${obj.imageSrc.uid}, good day!`}`;
-zenToPolymer1(test5, obj);
+const test5 = zen `span${o => `Hello, ${o.imageSrc}, good day!`}`;
+zenToPolymer1(test5, PhotoElement);
 //console.log(test5);
 const html5 = test5.join('');
 console.assert(html5 === '<span>Hello, [[imageSrc]], good day!</span>', 'test 5 failed');
@@ -73,12 +71,13 @@ const PhotoAlbum = {
 
 
 const test6 = zen `ul                                       ${{'➰': p => p.photos, '🎬':photo => zen 
-                    `li${'photo ' + photo.imageSrc.uid}`    }  as LoopTemplate<IPhotoAlbum, IPhotoElement>}`;
+                    `li${'photo ' + photo.imageSrc}`    }  as LoopTemplate<IPhotoAlbum, IPhotoElement>}`;
 
 
 zenToPolymer1(test6, PhotoAlbum);
 
 const flattenedTest6 = flattenArray(test6);
 const html6 = flattenedTest6.join('');
-//console.log(html6);
-console.assert(html6 === '<ul><template is="dom-repeat" items="{{photos}}"><li>photo [[item.imageSrc]]</li></template></ul>');
+console.log(html6);
+console.assert(html6 === '<ul><template is="dom-repeat" items="{{photos}}"><li>photo [[item.imageSrc]]</li></template></ul>',
+                'test6 failed');

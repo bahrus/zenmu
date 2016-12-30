@@ -1,84 +1,87 @@
 "use strict";
-var xyR = /[xy]/g;
+const xyR = /[xy]/g;
 function guid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(xyR, function (c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(xyR, c => {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
 }
-function populateGUIds(obj) {
-    var names = Object.getOwnPropertyNames(obj);
-    for (var _i = 0, names_1 = names; _i < names_1.length; _i++) {
-        var name_1 = names_1[_i];
-        obj[name_1].uid = guid();
-    }
-}
-function replaceGUIDsWithPolymerSelector(s, obj, path) {
-    if (path === void 0) { path = ''; }
+// function populateGUIds(obj){
+//     const names = Object.getOwnPropertyNames(obj);
+//     for(const name of names){
+//         obj[name].uid = guid();
+//     }
+// }
+function replaceGUIDsWithPolymerSelector(s, objMapping, path = '') {
     switch (typeof s) {
         case 'string':
-            var names = Object.getOwnPropertyNames(obj);
-            var returnS = s;
-            for (var _i = 0, names_2 = names; _i < names_2.length; _i++) {
-                var name_2 = names_2[_i];
-                returnS = returnS.replace(obj[name_2].uid, "[[" + (path + (path ? '.' : '') + name_2) + "]]");
+            let returnS = s;
+            const lu = objMapping.uidToPathLookup;
+            for (const key in lu) {
+                const path = lu[key];
+                //returnS = returnS.replace(key, `[[${path + (path ? '.' : '') + name}]]`);
+                returnS = returnS.replace(key, `[[${path}]]`);
             }
             return returnS;
         case 'object':
             if (Array.isArray(s)) {
-                return s.map(function (part) { return replaceGUIDsWithPolymerSelector(part, obj, path); });
+                return s.map(part => replaceGUIDsWithPolymerSelector(part, objMapping, path));
             }
             throw "Not Implemented";
     }
 }
 function extractPathFromFunction(s) {
-    var returnSplit = s.split('return ', 2);
-    var rhs = returnSplit[1];
-    var reg = /[;}\s]$/g;
-    var words = rhs.replace(/[\;\s}]/g, '');
-    return substringAfter(words, '.');
+    const returnSplit = s.split('return ', 2); //ES5
+    if (returnSplit.length > 1) {
+        const rhs = returnSplit[1];
+        const reg = /[;}\s]$/g;
+        const words = rhs.replace(/[\;\s}]/g, '');
+        return substringAfter(words, '.');
+    }
+    const arrowSplit = s.split('=>');
+    const lhs = arrowSplit[0].trim();
+    const rhs = arrowSplit[1].replace(lhs + '.', '').replace(';', '').trim();
+    return rhs;
 }
 function substringBefore(s, search) {
-    var iPos = s.indexOf(search);
+    const iPos = s.indexOf(search);
     if (iPos > -1)
         return s.substr(0, iPos);
     return s;
 }
 function substringAfter(s, search) {
-    var iPos = s.indexOf(search);
+    const iPos = s.indexOf(search);
     if (iPos === -1)
         return '';
     if (iPos === s.length - 1)
         return '';
     return s.substr(iPos + 1);
 }
-function zenToPolymer1(zen, obj, path) {
-    if (path === void 0) { path = ''; }
-    populateGUIds(obj);
-    for (var i = 0, ii = zen.length; i < ii; i++) {
-        var word = zen[i];
+function zenToPolymer1(zen, obj, path = '') {
+    const objectMapping = mapObject(obj);
+    for (let i = 0, ii = zen.length; i < ii; i++) {
+        const word = zen[i];
         switch (typeof word) {
             case 'function':
-                var evalledFunction = word(obj);
-                var polymerExpr = replaceGUIDsWithPolymerSelector(evalledFunction, obj, path);
+                const evalledFunction = word(objectMapping.uidObject);
+                const polymerExpr = replaceGUIDsWithPolymerSelector(evalledFunction, objectMapping, path);
                 zen[i] = polymerExpr;
                 break;
             case 'object':
-                var loop = word['➰'];
-                var action = word['🎬'];
+                const loop = word['➰'];
+                const action = word['🎬'];
                 if (!loop || !action)
                     throw "Not Implemented";
-                var outputArr = [];
-                var repeatSelector = extractPathFromFunction(loop.toString());
-                outputArr.push("<template is=\"dom-repeat\" items=\"{{" + repeatSelector + "}}\">");
-                var loopVal = loop(obj);
-                var firstItem = loopVal[0];
-                var actionSeq = [action];
+                const outputArr = [];
+                const repeatSelector = extractPathFromFunction(loop.toString());
+                outputArr.push(`<template is="dom-repeat" items="{{${repeatSelector}}}">`);
+                const loopVal = loop(obj);
+                const firstItem = loopVal[0];
+                const actionSeq = [action];
                 zenToPolymer1(actionSeq, firstItem, "item");
                 //const zen1 = action(firstItem);
                 //zenToPolymer1(zen1, firstItem);
-                for (var _i = 0, actionSeq_1 = actionSeq; _i < actionSeq_1.length; _i++) {
-                    var child = actionSeq_1[_i];
+                for (const child of actionSeq) {
                     outputArr.push(child);
                 }
                 outputArr.push('</template>');
@@ -89,10 +92,8 @@ function zenToPolymer1(zen, obj, path) {
     }
 }
 exports.zenToPolymer1 = zenToPolymer1;
-function flattenArray(arr, cumm) {
-    if (cumm === void 0) { cumm = []; }
-    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
-        var el = arr_1[_i];
+function flattenArray(arr, cumm = []) {
+    for (const el of arr) {
         switch (typeof el) {
             case 'string':
                 cumm.push(el);
@@ -109,4 +110,17 @@ function flattenArray(arr, cumm) {
     return cumm;
 }
 exports.flattenArray = flattenArray;
+function mapObject(obj) {
+    const returnObj = {
+        uidToPathLookup: {},
+        uidObject: {}
+    };
+    const names = Object.getOwnPropertyNames(obj);
+    for (const name of names) {
+        const uid = guid();
+        returnObj.uidToPathLookup[uid] = name;
+        returnObj.uidObject[name] = uid;
+    }
+    return returnObj;
+}
 //# sourceMappingURL=zenPolymer1.js.map

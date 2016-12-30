@@ -1,15 +1,11 @@
 "use strict";
-var numberDel = '⏰';
-function zen(strings) {
-    var values = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        values[_i - 1] = arguments[_i];
-    }
-    var sArr = strings;
-    var sArrWithSiblings = [];
-    for (var i = 0, ii = sArr.length; i < ii; i++) {
-        var word = sArr[i];
-        var sArrElement = word + numberDel + i;
+const numberDel = '⏰';
+function zen(strings, ...values) {
+    const sArr = strings;
+    const sArrWithSiblings = [];
+    for (let i = 0, ii = sArr.length; i < ii; i++) {
+        const word = sArr[i];
+        const sArrElement = word + numberDel + i;
         if (sArrElement.substr(0, 1) === '+') {
             sArrWithSiblings[sArrWithSiblings.length - 1] += sArrElement;
         }
@@ -17,69 +13,68 @@ function zen(strings) {
             sArrWithSiblings.push(sArrElement);
         }
     }
-    var outputArr = [];
-    var allTags = [];
-    for (var _a = 0, sArrWithSiblings_1 = sArrWithSiblings; _a < sArrWithSiblings_1.length; _a++) {
-        var tagSequence = sArrWithSiblings_1[_a];
-        var tags = tagSequence.split('>');
+    const outputArr = [];
+    let allTags = [];
+    for (const tagSequence of sArrWithSiblings) {
+        const tags = tagSequence.split('>');
         allTags = allTags.concat(tags);
     }
     processTags(allTags, outputArr, values);
     return outputArr;
 }
 exports.zen = zen;
-var camelToSnakeRegEx = /([A-Z])/g;
-var toDashLowerCase = function ($1) { return "-" + $1.toLowerCase(); };
+const camelToSnakeRegEx = /([A-Z])/g;
+const toDashLowerCase = function ($1) { return "-" + $1.toLowerCase(); };
 function camelToSnake(str) {
     return str.replace(camelToSnakeRegEx, toDashLowerCase);
 }
-var splitRegExps = {};
+const splitRegExps = {};
 function splitWithEscape(s, chr) {
-    var reg = splitRegExps[chr];
+    let reg = splitRegExps[chr];
     if (!reg) {
-        var r = "([^\\\\\\][^" + chr + "]|\\\\" + chr + ")+";
+        const r = `([^\\\\\\][^${chr}]|\\\\${chr})+`;
         reg = new RegExp(r, 'g');
         splitRegExps[chr] = reg;
     }
-    var ret = (' ' + s).match(reg);
+    const ret = (' ' + s).match(reg);
     ret[0] = ret[0].substr(1);
     return ret;
 }
 function processTag(tag, outputArr, values, fnInside) {
     if (tag.length === 0)
         return;
-    var tagWNumber = tag.split(numberDel);
-    var tagWONumber = tagWNumber[0];
-    var tagWAttributes = splitWithEscape(tagWONumber, '@');
-    var tagWOAttributes = tagWAttributes[0];
-    var tagWClasses = tagWOAttributes.split('.');
-    var tagWOClasses = tagWClasses[0];
-    var tagWID = tagWOClasses.split('#', 2);
-    var tagWOIDAndNoDiv = tagWID[0];
-    var idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
-    var val = idx > -1 ? values[idx] : undefined;
+    const tagWNumber = tag.split(numberDel);
+    const tagWONumber = tagWNumber[0];
+    const tagWAttributes = splitWithEscape(tagWONumber, '@');
+    const tagWOAttributes = tagWAttributes[0];
+    const tagWClasses = tagWOAttributes.split('.');
+    const tagWOClasses = tagWClasses[0];
+    const tagWID = tagWOClasses.split('#', 2);
+    const tagWOIDAndNoDiv = tagWID[0];
+    const idx = (tagWNumber.length > 1) ? parseInt(tagWNumber[1]) : -1;
+    const val = idx > -1 ? values[idx] : undefined;
     if (tagWOIDAndNoDiv.length === 0) {
         if (tagWID.length === 1 && tagWClasses.length === 1 && tagWAttributes.length === 1) {
             if (typeof val === 'undefined')
                 return;
         }
     }
-    var tagWOID = tagWOIDAndNoDiv ? tagWOIDAndNoDiv.trim() : 'div';
+    const tagWOID = tagWOIDAndNoDiv ? tagWOIDAndNoDiv.trim() : 'div';
     outputArr.push('<' + tagWOID);
     if (tagWID.length > 1) {
-        outputArr.push(" id=\"" + tagWID[1] + "\"");
+        outputArr.push(` id="${tagWID[1]}"`);
     }
     if (tagWAttributes.length > 1) {
-        var attribs = tagWAttributes.slice(1).map(function (s) {
+        const attribs = tagWAttributes.slice(1).map(s => {
             //const lhsRhs = s.match(scSplitRegExp);
-            var lhsRhs = splitWithEscape(s, ':');
-            var key = camelToSnake(lhsRhs[0]);
-            return lhsRhs.length === 1 ? key : key + "=\"" + lhsRhs[1] + "\"";
+            const lhsRhs = splitWithEscape(s, ':');
+            const key = camelToSnake(lhsRhs[0]);
+            return lhsRhs.length === 1 ? key : `${key}="${lhsRhs[1]}"`;
         }).join(' ');
-        outputArr.push(" " + attribs);
+        outputArr.push(` ${attribs}`);
     }
     if (tagWClasses.length > 1) {
-        outputArr.push(" class=\"" + tagWClasses.slice(1).join(' ') + "\"");
+        outputArr.push(` class="${tagWClasses.slice(1).join(' ')}"`);
     }
     if (typeof val !== 'undefined') {
         switch (typeof val) {
@@ -88,15 +83,15 @@ function processTag(tag, outputArr, values, fnInside) {
                 outputArr.push(val);
                 break;
             case 'object':
-                var props = val;
-                var content = null;
+                let props = val;
+                let content = null;
                 if (Array.isArray(val)) {
                     throw "Not Implemented";
                 }
-                var loop = void 0;
-                var action = void 0;
-                for (var key in props) {
-                    var atV = props[key];
+                let loop;
+                let action;
+                for (const key in props) {
+                    const atV = props[key];
                     switch (key) {
                         case '🎬':
                             action = atV;
@@ -112,11 +107,11 @@ function processTag(tag, outputArr, values, fnInside) {
                             switch (typeof atV) {
                                 case 'boolean':
                                     if (atV) {
-                                        outputArr.push(" " + camelToSnake(key));
+                                        outputArr.push(` ${camelToSnake(key)}`);
                                     }
                                     break;
                                 default:
-                                    outputArr.push(" " + camelToSnake(key) + "=\"" + atV + "\"");
+                                    outputArr.push(` ${camelToSnake(key)}="${atV}"`);
                             }
                     }
                 }
@@ -124,18 +119,16 @@ function processTag(tag, outputArr, values, fnInside) {
                 if (loop && action) {
                     switch (typeof loop) {
                         case 'function':
-                            var loopInfo = {
+                            const loopInfo = {
                                 '➰': loop,
                                 '🎬': action,
                             };
                             outputArr.push(loopInfo);
                             break;
                         default:
-                            for (var _i = 0, loop_1 = loop; _i < loop_1.length; _i++) {
-                                var item = loop_1[_i];
-                                var output = action(item);
-                                for (var _a = 0, output_1 = output; _a < output_1.length; _a++) {
-                                    var oi = output_1[_a];
+                            for (const item of loop) {
+                                const output = action(item);
+                                for (const oi of output) {
                                     outputArr.push(oi);
                                 }
                             }
@@ -161,16 +154,15 @@ function processTag(tag, outputArr, values, fnInside) {
 function processTags(tags, outputArr, values) {
     if (tags.length === 0)
         return;
-    var surroundingTag = tags.shift();
+    let surroundingTag = tags.shift();
     if (surroundingTag.indexOf('+') > -1) {
-        var siblingTags = surroundingTag.split('+');
-        for (var _i = 0, siblingTags_1 = siblingTags; _i < siblingTags_1.length; _i++) {
-            var tag = siblingTags_1[_i];
+        const siblingTags = surroundingTag.split('+');
+        for (const tag of siblingTags) {
             processTag(tag, outputArr, values, null);
         }
     }
     else {
-        var innerFun = function () { return processTags(tags, outputArr, values); };
+        const innerFun = () => processTags(tags, outputArr, values);
         processTag(surroundingTag, outputArr, values, innerFun);
     }
 }
