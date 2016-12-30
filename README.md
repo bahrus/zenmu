@@ -24,7 +24,9 @@ generates (sans line feed formatting):
 
 Whereas Emmet's purpose is to reduce key strokes while typing up an html compliant web page, Zen Mu's goals are slightly different.  It is meant to provide a *permament* compact format for actually defining the html markup during run time or build time, taking advantage of the power of JavaScript's template literals.
 
-Why would we want to do this?  
+Why would we want to do this? 
+
+There is currently a debate about where the "proper" place is for HTML markup -- directly in html pages, or embedded in JavaScript via template literals or JSX.  
 
 There used to be something approaching a consensus in the web development community that a web page's semantic UI should be defined by declarative HTML markup files -- static files, or said files enhanced with non intrusive dynamic formatting instructions.  Styling should be defined separately via declarative css files.  In this view, the role of writing new JavaScript (or server side rendering languages) was limited to enhancing the declarative markup, when the functionality exceeded what was available from the browser or previous encapsulated tags / attributes.  
 
@@ -34,13 +36,13 @@ One thing that seems reasonably likely is that as long as browsers are optimized
 
 Indeed, careful analysis of [how best to provide a lightning fast mobile web app] (https://hackernoon.com/10-things-i-learned-making-the-fastest-site-in-the-world-18a0e1cdf4a7#.3x16pd7np) suggests that really, the HTML markup is still the most viable *build/compile-time target* of these libraries (combined with a functional representation of how to dynamically update the dom once rendered based on user interation and other events).
 
-It is arguable whether JSX is a preferable "markup syntax" to support, rather than HTML.  
+It is debatable whether JSX or template literals, is a preferable "markup syntax" to support, as opposed to maintaining raw HTML directly.   
 
-Some popular libraries like [Vue.js take a dim view of this role for JavaScript] (https://vuejs.org/v2/guide/render-function.html).  Vue.js recognize JSX's ability to tap into the power of JavaScript,  as something that can help in limited circumstances. This seems to be a reasonable point of view.
+Some popular libraries like [Vue.js take a dim view of this role for JavaScript] (https://vuejs.org/v2/guide/render-function.html).  But Vue.js recognizes JSX's ability to tap into the power of JavaScript,  as something that can help in limited circumstances. This seems to be a reasonable point of view.
 
 Others view the various HTML extended templating syntaxes, like those found in Polymer, Vue, Angular, Aurelia as contrived or "magical", preferring the more powerful JavaScript-like syntax of JSX, or true JavaScript power of the standardized template literals, perhaps combined with the tooling and build time checks that Typescript or other typed systems provide. 
 
-But it is the view of zen mu, that for those possibly limited circumstances where the power of JavaScript is needed, that the full xml-compliant syntax of HTML embedded in JavaScript doesn't really help, and just bogs the JavaScript down. 
+But it is the view of zen mu, that for those (possibly limited) circumstances where the power of JavaScript is needed, that the full xml-compliant syntax of HTML embedded in JavaScript isn't the most efficient way to do it, and just bogs the JavaScript down. 
 
 Zen mu's primary purpose is to provide a compact markup source, natural to the developer after enough exposure, which, together with custom libraries, can be used to target various consumers in an optimized way.  Targets of the transformation could include static web site publishing, or template generated environments like Polymer.js, JSX, etc.  It is conceivable that one could start from the same source definition, and transform to multiple such environments, allowing consumers of the definition to pick whichever they prefer.
 
@@ -49,3 +51,83 @@ Another potential use of zen mu might be in reducing the amount of (gzipped, min
 On the other hand, for those circumstances where the power of JavaScript is truly the best fit for a significant amount of markup definition, even during runtime in the browser, zen mu could find a role in reducing the bandwidth and parsing requirements incurred by larger amounts of markup.
 
 Zen mu could also be used on the server side, as a potential competitor with other HTML simplifying languages, like Jade.
+
+##Syntax via examples##
+
+###Example 1.  ###
+
+```JavaScript
+zen `.myClass2>ul#myUL.myClass1@myAttrib1:val1@myAttrib2:42@myAttrib3>li${'Hello, '}+li${'World.'}`
+```
+generates:
+
+```JavaScript
+[ '<div',
+  ' class="myClass2"',
+  '>',
+  '<ul',
+  ' id="myUL"',
+  ' my-attrib1="val1" my-attrib2="42" my-attrib3',
+  ' class="myClass1"',
+  '>',
+  '<li',
+  '>',
+  'Hello, ',
+  '</li>',
+  '<li',
+  '>',
+  'World.',
+  '</li>',
+  '</ul>',
+  '</div>' ]
+```
+
+###Eample 2.  Variable binding.###
+```JavaScript
+const cnnURL = 'http://www.cnn.com';
+const cnnText = 'This is CNN';
+zen `a${{href:cnnURL,innerHTML:cnnText}}`;
+```
+
+generates:
+
+```JavaScript
+[ '<a', ' href="http://www.cnn.com"', '>', 'This is CNN', '</a>' ]
+```
+
+###Example 3. Loop generation
+
+```JavaScript
+const range = [1, 2, 3, 4, 5];
+const test4 = zen `ul                                   ${{'➰': range, '🎬':n => zen 
+                    `li${'item ' + n}`                  }}`; 
+
+```
+
+generates:
+
+```JavaScript
+[ '<ul',
+  '>',
+  '<li',
+  '>',
+  'item 1',
+  '</li>',
+  '<li',
+  '>',
+  'item 2',
+  '</li>',
+  '<li',
+  '>',
+  'item 3',
+  '</li>',
+  '<li',
+  '>',
+  'item 4',
+  '</li>',
+  '<li',
+  '>',
+  'item 5',
+  '</li>',
+  '</ul>' ]
+```

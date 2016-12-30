@@ -8,6 +8,7 @@ interface IAttribs{
 }
 
 const test1 = zen        `.myClass2>ul#myUL.myClass1@myAttrib1:val1@myAttrib2:42@myAttrib3>li${'Hello, '}+li${'World.'}`
+//console.log(test1);
 const html1 = test1.join('');
 
 console.assert(html1 === `<div class="myClass2"><ul id="myUL" my-attrib1="val1" my-attrib2="42" my-attrib3 class="myClass1"><li>Hello, </li><li>World.</li></ul></div>`
@@ -22,15 +23,16 @@ const cnnURL = "http://www.cnn.com";
 const cnnText = 'This is CNN';
 type a = HTMLAnchorElement;
 const test3 = zen        `a${{href:cnnURL,innerHTML:cnnText} as a}`;
+//console.log(test3);
 const html3 = test3.join('');
 //console.log(html3);
 console.assert(html3 === `<a href="${cnnURL}">${cnnText}</a>`, 'test 3 failed');
 
 const range = [1, 2, 3, 4, 5];
 type nLoop = Loop<number>;
-const test4 = zen `ul                                   ${{'➰': range, '🎬':n => zen 
-                    `li${'item ' + n}`                  } as nLoop}`;
-                    
+const test4 = zen `ul                   ${{'➰': range, '🎬':n => zen 
+                    `li${'item ' + n}`  } as nLoop}`;
+console.log(test4);                    
 const html4 = test4.join('');
 //console.log(html4);
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>', 'test 4 failed');
