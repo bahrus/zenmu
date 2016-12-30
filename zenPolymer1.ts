@@ -13,7 +13,7 @@ function guid(){
 //         obj[name].uid = guid();
 //     }
 // }
-function replaceGUIDsWithPolymerSelector(s: any, objMapping: ObjectMapping, path: string = ''){
+function replaceGUIDsWithPolymerSelector(s: any, objMapping: ObjectMapping, basePath: string = ''){
     switch(typeof s){
         case 'string':
             
@@ -22,12 +22,12 @@ function replaceGUIDsWithPolymerSelector(s: any, objMapping: ObjectMapping, path
             for(const key in lu){
                 const path = lu[key];
                 //returnS = returnS.replace(key, `[[${path + (path ? '.' : '') + name}]]`);
-                returnS = returnS.replace(key, `[[${path}]]`);
+                returnS = returnS.replace(key, `[[${basePath + path}]]`);
             }
             return returnS;
         case 'object':
             if(Array.isArray(s)){
-                return s.map(part => replaceGUIDsWithPolymerSelector(part, objMapping, path));
+                return s.map(part => replaceGUIDsWithPolymerSelector(part, objMapping, 'item.'));
             }
             throw "Not Implemented";
     }
