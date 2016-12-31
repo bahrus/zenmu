@@ -1,6 +1,6 @@
 import {zen, Loop, LoopTemplate} from './zenCore';
 import {zenToPolymer1, flattenArray} from './zenPolymer1';
-
+declare const global;
 interface IAttribs{
     myAttrib1: string,
     myAttrib2: number,
@@ -32,7 +32,7 @@ const range = [1, 2, 3, 4, 5];
 type nLoop = Loop<number>;
 const test4 = zen `ul                   ${{'➰': range, '🎬':n => zen 
                     `li${'item ' + n}`  } as nLoop}`;
-console.log(test4);                    
+//console.log(test4);                    
 const html4 = test4.join('');
 //console.log(html4);
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>', 'test 4 failed');
@@ -43,8 +43,8 @@ interface IProperty{
     //uid?: string,
 }
 interface IPhotoElement{
-    imageSrc: IProperty,
-    caption: IProperty
+    imageSrc?: IProperty | string,
+    caption?: IProperty | string,
 }
 
 const PhotoElement = {
@@ -75,11 +75,16 @@ const PhotoAlbum = {
 const test6 = zen `ul                                       ${{'➰': p => p.photos, '🎬':photo => zen 
                     `li${'photo ' + photo.imageSrc}`    }  as LoopTemplate<IPhotoAlbum, IPhotoElement>}`;
 
+const test6a = test6.map(x => x.toString());
+//console.log(test6a);
 
 zenToPolymer1(test6, PhotoAlbum);
-
 const flattenedTest6 = flattenArray(test6);
 const html6 = flattenedTest6.join('');
-console.log(html6);
+//console.log(html6);
 console.assert(html6 === '<ul><template is="dom-repeat" items="{{photos}}"><li>photo [[item.imageSrc]]</li></template></ul>',
                 'test6 failed');
+
+global['PhotoElement'] = PhotoElement;
+const test7 = zen `ul><PhotoElement>${{caption:'iah'} as IPhotoElement}`
+console.log(test7);

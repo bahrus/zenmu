@@ -97,10 +97,13 @@ generates:
 
 ### Example 3. Loop generation
 
+
+Note that the way this is formatted below is optional.  We think it's more readable to separate the actual markup, in a left column, from a right column, where JavaScript instructions are found.  But if this doesn't appeal to you, the ${} section can come right after the ul, and it could be condensed into a single line.
+
 ```JavaScript
 const range = [1, 2, 3, 4, 5];
-const test4 = zen `ul                                   ${{'➰': range, '🎬':n => zen 
-                    `li${'item ' + n}`                  }}`; 
+const test4 = zen `ul                     ${{'➰': range, '🎬':n => zen 
+                    `li${'item ' + n}`    }}`; 
 
 ```
 
@@ -131,3 +134,29 @@ generates:
   '</li>',
   '</ul>' ]
 ```
+
+### Example 4.  Create an AST which can  transform into specific templates
+
+```JavaScript
+const templateGenerator = zen `ul                                   ${{'➰': p => p.photos, '🎬':photo => zen 
+       `li${'photo ' + photo.imageSrc}`   }}`;
+```
+
+generates:
+
+```JavaScript
+["<ul", ">", {➰: p => p.photos, 🎬: photo => zen  `li${'photo ' + photo.imageSrc}`}, "</ul>"]
+```
+
+One can use this together with a template adapter, to generate syntax specific to a framework.
+
+So for the above example, in app.ts you will see a set of steps that can convert the templateGenerator above into:
+
+```HTML
+  <ul>
+    <template is="dom-repeat" items="{{photos}}">
+      <li>photo [[item.imageSrc]]</li>
+    </template>
+  </ul>
+```
+

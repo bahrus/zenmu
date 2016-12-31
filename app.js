@@ -17,7 +17,7 @@ const html3 = test3.join('');
 console.assert(html3 === `<a href="${cnnURL}">${cnnText}</a>`, 'test 3 failed');
 const range = [1, 2, 3, 4, 5];
 const test4 = zenCore_1.zen `ul                   ${{ '➰': range, '🎬': n => zenCore_1.zen `li${'item ' + n}` }}`;
-console.log(test4);
+//console.log(test4);                    
 const html4 = test4.join('');
 //console.log(html4);
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>', 'test 4 failed');
@@ -38,9 +38,14 @@ const PhotoAlbum = {
     photos: [PhotoElement],
 };
 const test6 = zenCore_1.zen `ul                                       ${{ '➰': p => p.photos, '🎬': photo => zenCore_1.zen `li${'photo ' + photo.imageSrc}` }}`;
+const test6a = test6.map(x => x.toString());
+//console.log(test6a);
 zenPolymer1_1.zenToPolymer1(test6, PhotoAlbum);
 const flattenedTest6 = zenPolymer1_1.flattenArray(test6);
 const html6 = flattenedTest6.join('');
-console.log(html6);
+//console.log(html6);
 console.assert(html6 === '<ul><template is="dom-repeat" items="{{photos}}"><li>photo [[item.imageSrc]]</li></template></ul>', 'test6 failed');
+global['PhotoElement'] = PhotoElement;
+const test7 = zenCore_1.zen `ul><PhotoElement>${{ caption: 'iah' }}`;
+console.log(test7);
 //# sourceMappingURL=app.js.map
