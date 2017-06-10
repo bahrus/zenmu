@@ -102,8 +102,8 @@ Note that the way this is formatted below is optional.  We think it's more reada
 
 ```JavaScript
 const range = [1, 2, 3, 4, 5];
-const test4 = zen `ul                     ${{'➰': range, '🎬':n => zen 
-                    `li${'item ' + n}`    }}`; 
+const test4 = zen `ul                             ${{'➰': range, '🎬':
+                     n=>zen `li${'item ' + n}`    }}`; 
 
 ```
 
@@ -168,9 +168,9 @@ let weather = {
   isWarm: temperature > 80
 };
 
-const decision = zen `ul                                    ${{
+const decision = zen `ul                                              ${{
                         '❓': p => p.isWarm, 
-                                     '✔️': zen `li${'Wear shorts'}    ,
-                                     '❌': zen `li${'Wear pants'}     ,
-                                     '🔳': zen `li${'Stay inside'}    }}
+                              '✔️': zen `li${'Wear shorts'}          ,
+                              '❌': zen `li${'Wear pants'}           ,
+                              '🔳': zen `li${'Stay inside'}          }}
 ```
