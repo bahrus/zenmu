@@ -6,12 +6,6 @@ function guid() {
         return v.toString(16);
     });
 }
-// function populateGUIds(obj){
-//     const names = Object.getOwnPropertyNames(obj);
-//     for(const name of names){
-//         obj[name].uid = guid();
-//     }
-// }
 function replaceGUIDsWithPolymerSelector(s, objMapping, basePath = '') {
     switch (typeof s) {
         case 'string':
@@ -123,4 +117,42 @@ function mapObject(obj) {
     }
     return returnObj;
 }
+function toPolymerElement(obj) {
+    const properties = [];
+    const names = Object.getOwnPropertyNames(obj);
+    const outArr = ['Polymer({'];
+    //#region Inside of Polymer
+    let foundProperty = false;
+    const observingMethods = {};
+    for (const name of names) {
+        const prop = obj[name];
+        if (!foundProperty) {
+            outArr.push("properties:{");
+            foundProperty = true;
+        }
+        outArr.push(name + ':{');
+        const typ = prop.type ? prop.type.name : 'String';
+        outArr.push('type: ' + typ);
+        if (prop.setter) {
+            const observerName = '_' + name + '_change';
+            observingMethods[observerName] = prop.setter;
+            outArr.push(`observer:'${observerName}'`);
+        }
+        outArr.push('},');
+    }
+    if (foundProperty)
+        outArr.push("},");
+    for (const method in observingMethods) {
+        const setterString = observingMethods[method].toString();
+        const splitSetter = setterString.split('=>');
+        let lhs = splitSetter[0].trim();
+        lhs = lhs.replace(', _this', '');
+        outArr.push(method + `: function${lhs}`);
+        outArr.push(splitSetter[1].replace('_this', 'this'));
+    }
+    //#endregion
+    outArr.push('})');
+    return outArr;
+}
+exports.toPolymerElement = toPolymerElement;
 //# sourceMappingURL=zenPolymer1.js.map

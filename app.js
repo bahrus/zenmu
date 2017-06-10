@@ -24,11 +24,27 @@ console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>i
 const PhotoElement = {
     imageSrc: {
         type: String,
+        setter: (newVal, oldVal, _this) => {
+            _this.importHref('blah');
+        },
+        polymer1Setter: (newVal, oldVal, _this) => {
+        },
+        postVendorSetter: (newVal, oldVal, _this) => {
+        }
     },
     caption: {
         type: String
+    },
+    imageAndCaption: {
+        type: String,
+        readOnly: true,
+        getter: (imageSrc, caption, _this) => {
+            return caption + '[' + imageSrc + ']';
+        }
     }
 };
+const test9 = zenPolymer1_1.toPolymerElement(PhotoElement);
+console.log(test9);
 const test5 = zenCore_1.zen `span${o => `Hello, ${o.imageSrc}, good day!`}`;
 zenPolymer1_1.zenToPolymer1(test5, PhotoElement);
 //console.log(test5);
@@ -47,5 +63,5 @@ const html6 = flattenedTest6.join('');
 console.assert(html6 === '<ul><template is="dom-repeat" items="{{photos}}"><li>photo [[item.imageSrc]]</li></template></ul>', 'test6 failed');
 global['PhotoElement'] = PhotoElement;
 const test7 = zenCore_1.zen `ul><PhotoElement>${{ caption: 'iah' }}`;
-console.log(test7);
+//console.log(test7);
 //# sourceMappingURL=app.js.map

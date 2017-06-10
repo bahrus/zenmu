@@ -9,6 +9,12 @@ export interface LoopTemplate<TItemContainer, TItem>{
     '➰': (t: TItemContainer) => TItem[],
     '🎬': (t: TItem) => any,
 }
+export interface IProperty{
+    type?: any,
+    setter?: any,
+    readOnly?: boolean
+    //uid?: string,
+}
 export function zen(strings : any, ...values){
     const sArr = strings as string[];
     const sArrWithSiblings = [];

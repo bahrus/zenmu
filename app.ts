@@ -1,5 +1,5 @@
-import {zen, Loop, LoopTemplate} from './zenCore';
-import {zenToPolymer1, flattenArray} from './zenPolymer1';
+import {zen, Loop, LoopTemplate, IProperty} from './zenCore';
+import {zenToPolymer1, flattenArray, toPolymerElement} from './zenPolymer1';
 declare const global;
 interface IAttribs{
     myAttrib1: string,
@@ -38,10 +38,7 @@ const html4 = test4.join('');
 console.assert(html4 === '<ul><li>item 1</li><li>item 2</li><li>item 3</li><li>item 4</li><li>item 5</li></ul>', 'test 4 failed');
 
 //given on object, populate with unique identifiers
-interface IProperty{
-    type: any,
-    //uid?: string,
-}
+
 interface IPhotoElement{
     imageSrc?: IProperty | string,
     caption?: IProperty | string,
@@ -50,11 +47,33 @@ interface IPhotoElement{
 const PhotoElement = {
     imageSrc:{
         type: String,
+        setter:(newVal, oldVal, _this) =>{
+            _this.importHref('blah')
+        },
+        polymer1Setter:(newVal, oldVal, _this) =>{
+
+        },
+        postVendorSetter:(newVal, oldVal, _this) => {
+
+        }
     },
     caption:{
         type: String
+    },
+    imageAndCaption:{
+        type: String,
+        readOnly: true,
+        getter: (imageSrc, caption, _this) =>{
+            return caption + '[' + imageSrc + ']';
+        }
     }
+    
 } as IPhotoElement;
+
+
+const test9 = toPolymerElement(PhotoElement);
+console.log(test9);
+
 
 const test5 = zen `span${o => `Hello, ${o.imageSrc}, good day!`}`;
 zenToPolymer1(test5, PhotoElement);
@@ -87,4 +106,6 @@ console.assert(html6 === '<ul><template is="dom-repeat" items="{{photos}}"><li>p
 
 global['PhotoElement'] = PhotoElement;
 const test7 = zen `ul><PhotoElement>${{caption:'iah'} as IPhotoElement}`
-console.log(test7);
+//console.log(test7);
+
+

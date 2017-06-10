@@ -52,7 +52,7 @@ On the other hand, for those circumstances where the power of JavaScript is trul
 
 Zen mu could also be used on the server side, as a potential competitor with other HTML simplifying languages, like Jade.
 
-##Syntax via examples##
+## Syntax via examples
 
 ### Example 1. 
 
@@ -139,7 +139,7 @@ generates:
 
 ```JavaScript
 const templateGenerator = zen `ul                                   ${{'➰': p => p.photos, '🎬':photo => zen 
-       `li${'photo ' + photo.imageSrc}`   }}`;
+                                `li${'photo ' + photo.imageSrc}`    }};
 ```
 
 generates:
@@ -160,3 +160,17 @@ So for the above example, in app.ts you will see a set of steps that can convert
   </ul>
 ```
 
+### Example 5.  Conditionals / switches
+
+```JavaScript
+const temperature
+let weather = {
+  isWarm: temperature > 80
+};
+
+const decision = zen `ul                                    ${{
+                        '❓': p => p.isWarm, 
+                                     '✔️': zen `li${'Wear shorts'}    ,
+                                     '❌': zen `li${'Wear pants'}     ,
+                                     '🔳': zen `li${'Stay inside'}    }}
+```
